@@ -33,6 +33,61 @@ import { FaChartBar } from "react-icons/fa";
 
 const log = () => {
   const [showInputForm, setShowInputForm] = useState(false)
+  const [coffeeType, setCoffeeType] = useState("black")
+  const [coffeeCost, setCoffeeCost] = useState(0)
+  const [coffeeCostCurrency, setCoffeeCostCurrency] = useState("EUR")
+  const [coffeeDecaf, setCoffeeDecaf] = useState(false)
+
+
+
+  const SendCoffeeStamp = () => {
+
+    var currentdate = new Date();
+    var datetime = currentdate.getDate() + "/"
+      + (currentdate.getMonth() + 1) + "/"
+      + currentdate.getFullYear() + " @ "
+      + currentdate.getHours() + ":"
+      + currentdate.getMinutes() + ":"
+      + currentdate.getSeconds();
+
+    if (isNaN(coffeeCost)) {
+      setCoffeeCost(0)
+    }
+
+    let coffeeStamp = {
+      UID: "1",
+      timestamp: {
+        fulldate: datetime,
+        year: currentdate.getFullYear(),
+        month: currentdate.getMonth() + 1,
+        day: currentdate.getDate(),
+        time: currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds()
+      },
+      type: coffeeType,
+      cost: coffeeCost,
+      costCurrency: coffeeCostCurrency,
+      decaf: coffeeDecaf
+
+    }
+
+    console.log(coffeeStamp)
+  }
+
+  const handleCostInput = (i) => {
+    var x = parseInt(i, 10);
+    if (isNaN(x)) {
+      setCoffeeCost(0)
+    }
+    else {
+      setCoffeeCost(x)
+    }
+
+  }
+
+  const handleDecafChange = () => {
+    setCoffeeDecaf(!coffeeDecaf)
+  }
+
 
   return (
     <ChakraProvider>
@@ -63,7 +118,7 @@ const log = () => {
                 <Text>Delicious!</Text>
 
 
-                <Button loadingText="Submitting" size="lg" bg={'blue.400'} color={'white'} _hover={{ bg: 'blue.500', }}>
+                <Button loadingText="Submitting" size="lg" bg={'blue.400'} color={'white'} _hover={{ bg: 'blue.500', }} onClick={() => SendCoffeeStamp()}>
                   Coffee had! +
                   <Icon as={FiCoffee} />
                 </Button>
@@ -78,22 +133,25 @@ const log = () => {
                 <VStack display={showInputForm ? "flex" : "none"}>
                   <InputGroup>
                     <VStack>
-                      <Select placeholder='Type'>
-                        <option value='option1'>Option 1</option>
-                        <option value='option2'>Option 2</option>
-                        <option value='option3'>Option 3</option>
+                      <Select placeholder='Type' onChange={(e) => setCoffeeType(e.target.value)}>
+                        <option value='black'>Black</option>
+                        <option value='black with milk'>Black with milk</option>
+                        <option value='espresso'>Espresso</option>
+                        <option value='double espresso'>Double espresso</option>
+                        <option value='latte'>Latte</option>
+                        <option value='cappuccino'>Cappuccino</option>
                       </Select>
                       <HStack>
-                        <Input placeholder='Cost'></Input>
-                        <Select>
-                          <option value='USD'>$</option>
+                        <Input placeholder='Cost' type="text" pattern="[0-9]*" onChange={(e) => handleCostInput(e.target.value)}></Input>
+                        <Select onChange={(e) => setCoffeeCostCurrency(e.target.value)}>
                           <option value='EUR'>€</option>
+                          <option value='USD'>$</option>
                           <option value='RUB'>₽</option>
                         </Select>
                       </HStack>
                       <HStack>
                         <Text>Decaf?</Text>
-                        <Checkbox></Checkbox>
+                        <Checkbox checked={coffeeDecaf} onChange={handleDecafChange}></Checkbox>
                       </HStack>
                     </VStack>
                   </InputGroup>
