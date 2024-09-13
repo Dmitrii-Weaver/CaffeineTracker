@@ -120,13 +120,6 @@ const log = () => {
                 <Icon as={FiCoffee} />
               </Button>
 
-              <Button loadingText="Submitting" size="lg" bg={'blue.400'} color={'white'} _hover={{ bg: 'blue.500', }} onClick={() => setShowInputForm(!showInputForm)}>
-                {showInputForm ?
-                  <> <Text>Detailed tracking &nbsp;</Text> <Icon as={RiArrowDownWideFill} /></> :
-                  <> <Text>Detailed tracking &nbsp;</Text> <Icon as={RiArrowUpWideFill} /></>
-                }
-              </Button>
-
               <VStack display={showInputForm ? "flex" : "none"}>
                 <InputGroup>
                   <VStack>
@@ -153,6 +146,15 @@ const log = () => {
                   </VStack>
                 </InputGroup>
               </VStack>
+
+              <Button loadingText="Submitting" size="lg" bg={'blue.400'} color={'white'} _hover={{ bg: 'blue.500', }} onClick={() => setShowInputForm(!showInputForm)}>
+                {showInputForm ?
+                  <> <Text>Detailed tracking &nbsp;</Text> <Icon as={RiArrowUpWideFill} /></> :
+                  <> <Text>Detailed tracking &nbsp;</Text> <Icon as={RiArrowDownWideFill}  /></>
+                }
+              </Button>
+
+              
 
             </VStack>
             <Heading size={"lg"}>Cups of coffee this week: 42</Heading>
