@@ -92,20 +92,19 @@ const log = () => {
       minH={'100vh'}
       align={'center'}
       justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+      boxShadow={'lg'}
+      bgImage={"../../assets/images/coffeebg.png"} bgSize="cover">
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6} bg={"#A68B83"} rounded="md" borderColor="black" borderWidth="2px">
         <Stack align={'center'}>
           <Heading fontSize={'4xl'} textAlign={'center'}>
             Caffeine Tracker
           </Heading>
-          <Text fontSize={'lg'} color={'gray.600'}>
+          <Text fontSize={'lg'} >
             Monitor your coffee drinking habit with one click!
           </Text>
         </Stack>
         <Box
           rounded={'lg'}
-          bg={useColorModeValue('white', 'gray.700')}
-          boxShadow={'lg'}
           p={8}>
           <Stack spacing={4}>
             <VStack>
@@ -115,7 +114,7 @@ const log = () => {
               <Text>Delicious!</Text>
 
 
-              <Button loadingText="Submitting" size="lg" bg={'blue.400'} color={'white'} _hover={{ bg: 'blue.500', }} onClick={() => SendCoffeeStamp()}>
+              <Button loadingText="Submitting" size="lg" bg={'#6A5650'} color={'white'} _hover={{ bg: '#886D65', }} onClick={() => SendCoffeeStamp()}>
                 Coffee had! +
                 <Icon as={FiCoffee} />
               </Button>
@@ -132,7 +131,7 @@ const log = () => {
                       <option value='cappuccino'>Cappuccino</option>
                     </Select>
                     <HStack>
-                      <Input placeholder='Cost' type="text" pattern="[0-9]*" onChange={(e) => handleCostInput(e.target.value)}></Input>
+                      <Input placeholder='Cost' type="text" _placeholder={{ color: 'black' }} pattern="[0-9]*" onChange={(e) => handleCostInput(e.target.value)}></Input>
                       <Select onChange={(e) => setCoffeeCostCurrency(e.target.value)}>
                         <option value='EUR'>€</option>
                         <option value='USD'>$</option>
@@ -147,7 +146,7 @@ const log = () => {
                 </InputGroup>
               </VStack>
 
-              <Button loadingText="Submitting" size="lg" bg={'blue.400'} color={'white'} _hover={{ bg: 'blue.500', }} onClick={() => setShowInputForm(!showInputForm)}>
+              <Button loadingText="Submitting" size="lg" bg={'#6A5650'} color={'white'} _hover={{ bg: '#886D65', }} onClick={() => setShowInputForm(!showInputForm)}>
                 {showInputForm ?
                   <> <Text>Detailed tracking &nbsp;</Text> <Icon as={RiArrowUpWideFill} /></> :
                   <> <Text>Detailed tracking &nbsp;</Text> <Icon as={RiArrowDownWideFill}  /></>
@@ -158,7 +157,7 @@ const log = () => {
 
             </VStack>
             <Heading size={"lg"}>Cups of coffee this week: 42</Heading>
-            <Button loadingText="Submitting" size="lg" bg={'blue.400'} color={'white'} _hover={{ bg: 'blue.500', }}>
+            <Button loadingText="Submitting" size="lg" bg={'#6A5650'} color={'white'} _hover={{ bg: '#886D65', }}>
               <Text>See stats! &nbsp;</Text>
               <Icon as={FaChartBar} />
             </Button>
