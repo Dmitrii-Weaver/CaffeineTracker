@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Button, Flex, FormControl, FormHelperText, FormLabel, Heading, Input, Stack, useToast, Text, Link } from '@chakra-ui/react'
 
-export default function signin() {
+export default function SignIn() {
 
     const toast = useToast();
 
@@ -15,31 +15,33 @@ export default function signin() {
             isClosable: true,
         });
     };
+
     return (
-        <Box
+        <Flex
             minH="100vh"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
             bg="gray.50"
-            p={4}
+            py={4}
+            px={4}
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
         >
             <Box
                 w="full"
                 maxW="md"
-                p={8}
+                p={6}
                 borderWidth={1}
                 borderRadius="lg"
                 bg="white"
                 boxShadow="lg"
+                mb={4}
             >
-
-                <Heading as="h1" size="lg" mb={6} textAlign="center">
+                <Heading as="h1" size="lg" mb={4} textAlign="center">
                     Welcome to Caffeine Tracker!
                 </Heading>
 
                 <form onSubmit={handleSubmit}>
-                    <Stack spacing={4}>
+                    <Stack spacing={3}>
                         <FormControl isRequired>
                             <FormLabel>Email</FormLabel>
                             <Input type="email" placeholder="Enter your email" />
@@ -56,13 +58,13 @@ export default function signin() {
                     </Stack>
                 </form>
 
-                <Text mt={4} textAlign="center">
+                <Text mt={3} textAlign="center">
                     Don't have an account?{" "}
-                    <Link color="blue.500">
+                    <Link href="/register" color="blue.500">
                         Sign up
                     </Link>
                 </Text>
             </Box>
-        </Box>
+        </Flex>
     );
 }
