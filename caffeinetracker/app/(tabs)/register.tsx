@@ -34,6 +34,7 @@ import { FormControl, FormControlError, FormControlErrorText, FormControlLabel, 
 export default function Register() {
     /* const toast = useToast(); */
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [errors, setErrors] = useState({ email: '', password: '' });
