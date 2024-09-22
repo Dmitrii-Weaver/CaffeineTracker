@@ -60,7 +60,7 @@ export default function SignIn() {
 
                 <Text mt={3} textAlign="center">
                     Don't have an account?{" "}
-                    <Link href="/register" color="blue.500">
+                    <Link href="/Register" color="blue.500">
                         Sign up
                     </Link>
                 </Text>

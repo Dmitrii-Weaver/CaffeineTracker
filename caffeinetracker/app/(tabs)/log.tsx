@@ -1,5 +1,5 @@
 import React from 'react'
-import {
+/* import {
   Flex,
   Box,
   FormControl,
@@ -18,9 +18,9 @@ import {
   VStack,
   Select,
   Checkbox,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react' */
 import { useState } from 'react'
-import { Icon } from '@chakra-ui/react'
+/* import { Icon } from '@chakra-ui/react' */
 
 
 import { FiCoffee } from "react-icons/fi";
@@ -29,7 +29,7 @@ import { RiArrowUpWideFill } from "react-icons/ri";
 import { FaChartBar } from "react-icons/fa";
 
 
-const log = () => {
+const Log = () => {
   const [showInputForm, setShowInputForm] = useState(false)
   const [coffeeType, setCoffeeType] = useState("black")
   const [coffeeCost, setCoffeeCost] = useState(0)
@@ -149,11 +149,11 @@ const log = () => {
               <Button loadingText="Submitting" size="lg" bg={'#6A5650'} color={'white'} _hover={{ bg: '#886D65', }} onClick={() => setShowInputForm(!showInputForm)}>
                 {showInputForm ?
                   <> <Text>Detailed tracking &nbsp;</Text> <Icon as={RiArrowUpWideFill} /></> :
-                  <> <Text>Detailed tracking &nbsp;</Text> <Icon as={RiArrowDownWideFill}  /></>
+                  <> <Text>Detailed tracking &nbsp;</Text> <Icon as={RiArrowDownWideFill} /></>
                 }
               </Button>
 
-              
+
 
             </VStack>
             <Heading size={"lg"}>Cups of coffee this week: 42</Heading>
@@ -170,4 +170,4 @@ const log = () => {
   )
 }
 
-export default log
+export default Log

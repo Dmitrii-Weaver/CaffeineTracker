@@ -1,9 +1,10 @@
 import React from 'react'
+import { View } from 'react-native'
 
-const charts = () => {
+const Charts = () => {
   return (
-    <div>data/charts output</div>
+    <View>data/charts output</View>
   )
 }
 
-export default charts
+export default Charts
