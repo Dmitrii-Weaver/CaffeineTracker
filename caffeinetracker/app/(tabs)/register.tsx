@@ -1,155 +1,214 @@
 import React, { useState } from 'react';
-import { Box } from '@/components/ui/box';
-import {
-    Button,
-    ButtonText,
-    ButtonSpinner,
-    ButtonIcon,
-    ButtonGroup,
-} from '@/components/ui/button';
-import { Heading } from '@/components/ui/heading';
-import { Input } from '@/components/ui/input';
-import { VStack } from '@/components/ui/vstack';
-import { useToast, Toast } from '@/components/ui/toast';
-import { Text } from '@/components/ui/text';
-import { Link } from '@/components/ui/link';
-import { FormControl, FormControlError, FormControlErrorText, FormControlLabel, FormControlLabelText } from '@/components/ui/form-control';
+import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, Link } from '@gluestack-ui/themed';
+import { Controller, useForm } from 'react-hook-form';
+import { ScrollView } from 'react-native';
 
-/* import {
-    Box,
-    Button,
-    FormControl,
-    FormLabel,
-    Heading,
-    Input,
-    Stack,  
-    useToast,
-    Text,
-    Link,
-    FormErrorMessage,
-} from '@chakra-ui/react'; */
-
-
+type FormData = {
+    email: string;
+    username: string;
+    password: string;
+    repeatPassword: string;
+};
 
 export default function Register() {
-    /* const toast = useToast(); */
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [repeatPassword, setRepeatPassword] = useState('');
-    const [errors, setErrors] = useState({ email: '', password: '' });
+    const toast = useToast()
+    const { control, handleSubmit, formState: { errors }, watch } = useForm<FormData>()
+    const [isLoading, setIsLoading] = useState(false)
 
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors = { email: '', password: '' };
+    const password = watch("password")
 
-        if (password !== repeatPassword) {
-            newErrors.password = 'Passwords do not match';
-            isValid = false;
-        }
+    const onSubmit = async (data: FormData) => {
+        setIsLoading(true)
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        setIsLoading(false)
 
-        setErrors(newErrors);
-        return isValid;
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (validateForm()) {
-            Toast({
-                /* title: 'Registration Successful', */
-                /* description: 'Your account has been created successfully!', */
-                /* status: 'success', */
-                /*  duration: 3000, */
-                /* isClosable: true, */
-            });
-        }
-    };
+        toast.show({
+            render: () => {
+                return (
+                    <Box bg="$green500" px="$4" py="$2" rounded="$sm" mb={5}>
+                        <Text color="$white">Registration Successful</Text>
+                    </Box>
+                )
+            },
+        })
+    }
 
     return (
-        <Box
-        /* minH="100vh" */
-        /* display="flex" */
-        /* justifyContent="center" */
-        /* alignItems="center" */
-        /* bg="gray.50" */
-        /* p={4} */
-        /* overflowY="auto" */
-        >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <Box
-            /* w="full" */
-            /* maxW="md" */
-            /* p={8} */
-            /* borderWidth={2} */
-            /* borderRadius="lg" */
-            /* bg="white" */
-            /* boxShadow="lg" */
-            /* mb={8} */
+                flex={1}
+                bg="$backgroundLight0"
+                py="$4"
+                px="$4"
+                justifyContent="center"
+                alignItems="center"
             >
-                <Heading size={'lg'}>
-                    Register for Caffeine Tracker
-                </Heading>
+                <Box
+                    w="$full"
+                    maxWidth="$96"
+                    p="$6"
+                    borderWidth="$1"
+                    borderRadius="$lg"
+                    bg="$white"
+                    shadowColor="$shadowColor"
+                    shadowOffset={{ width: 0, height: 2 }}
+                    shadowOpacity={0.25}
+                    shadowRadius={3.84}
+                    elevation={5}
+                >
+                    <Heading size="xl" mb="$4" textAlign="center">
+                        Register for Caffeine Tracker
+                    </Heading>
 
-                <form onSubmit={handleSubmit}>
-                    <VStack /* spacing={4} */>
-                        <FormControl isRequired isInvalid={!!errors.email}>
-                            <FormControlLabel>
-                                <FormControlLabelText>Email</FormControlLabelText>
-                            </FormControlLabel>
-                            <Input
-                            /*  type="email" */
-                            /* placeholder="Enter your email" */
-                            /* value={email} */
-                            /* onChange={(e) => setEmail(e.target.value)} */
-                            />
-                        </FormControl>
+                    <VStack space="md">
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: 'Email is required',
+                                pattern: {
+                                    value: /\S+@\S+\.\S+/,
+                                    message: 'Invalid email address',
+                                },
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <FormControl isInvalid={!!errors.email}>
+                                    <FormControlLabel>
+                                        <FormControlLabelText>Email</FormControlLabelText>
+                                    </FormControlLabel>
+                                    <Input>
+                                        <InputField
+                                            placeholder="Enter your email"
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            value={value}
+                                            keyboardType="email-address"
+                                            autoCapitalize="none"
+                                        />
+                                    </Input>
+                                    {errors.email ? (
+                                        <FormControlHelper>
+                                            <Text color="$error600">{errors.email.message}</Text>
+                                        </FormControlHelper>
+                                    ) : null}
+                                </FormControl>
+                            )}
+                            name="email"
+                        />
 
-                        <FormControl isRequired>
-                            <FormControlLabel>
-                                <FormControlLabelText>Username</FormControlLabelText>
-                            </FormControlLabel>
-                            <Input /* type="text" */ /* placeholder="Enter your username" */ />
-                        </FormControl>
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: 'Username is required',
+                                minLength: {
+                                    value: 3,
+                                    message: 'Username must be at least 3 characters',
+                                },
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <FormControl isInvalid={!!errors.username}>
+                                    <FormControlLabel>
+                                        <FormControlLabelText>Username</FormControlLabelText>
+                                    </FormControlLabel>
+                                    <Input>
+                                        <InputField
+                                            placeholder="Enter your username"
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            value={value}
+                                            autoCapitalize="none"
+                                        />
+                                    </Input>
+                                    {errors.username ? (
+                                        <FormControlHelper>
+                                            <Text color="$error600">{errors.username.message}</Text>
+                                        </FormControlHelper>
+                                    ) : null}
+                                </FormControl>
+                            )}
+                            name="username"
+                        />
 
-                        <FormControl isRequired isInvalid={!!errors.password}>
-                            <FormControlLabel>
-                                <FormControlLabelText>Password</FormControlLabelText>
-                            </FormControlLabel>
-                            <Input
-                            /* type="password" */
-                            /* placeholder="Enter your password" */
-                            /* value={password} */
-                            /* onChange={(e) => setPassword(e.target.value)} */
-                            />
-                        </FormControl>
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: 'Password is required',
+                                minLength: {
+                                    value: 6,
+                                    message: 'Password must be at least 6 characters',
+                                },
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <FormControl isInvalid={!!errors.password}>
+                                    <FormControlLabel>
+                                        <FormControlLabelText>Password</FormControlLabelText>
+                                    </FormControlLabel>
+                                    <Input>
+                                        <InputField
+                                            placeholder="Enter your password"
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            value={value}
+                                            secureTextEntry
+                                        />
+                                    </Input>
+                                    {errors.password ? (
+                                        <FormControlHelper>
+                                            <Text color="$error600">{errors.password.message}</Text>
+                                        </FormControlHelper>
+                                    ) : null}
+                                </FormControl>
+                            )}
+                            name="password"
+                        />
 
-                        <FormControl isRequired isInvalid={!!errors.password}>
-                            <FormControlLabel>
-                                <FormControlLabelText>Repeat</FormControlLabelText>
-                            </FormControlLabel>
-                            <Input
-                            /* type="password" */
-                            /* placeholder="Repeat your password" */
-                            /* value={repeatPassword} */
-                            /* onChange={(e) => setRepeatPassword(e.target.value)} */
-                            />
-                            <FormControlError>
-                                <FormControlErrorText>{errors.password}</FormControlErrorText>
-                            </FormControlError>
-                        </FormControl>
+                        <Controller
+                            control={control}
+                            rules={{
+                                validate: value => value === password || 'Passwords do not match'
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <FormControl isInvalid={!!errors.repeatPassword}>
+                                    <FormControlLabel>
+                                        <FormControlLabelText>Repeat Password</FormControlLabelText>
+                                    </FormControlLabel>
+                                    <Input>
+                                        <InputField
+                                            placeholder="Repeat your password"
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            value={value}
+                                            secureTextEntry
+                                        />
+                                    </Input>
+                                    {errors.repeatPassword ? (
+                                        <FormControlHelper>
+                                            <Text color="$error600">{errors.repeatPassword.message}</Text>
+                                        </FormControlHelper>
+                                    ) : null}
+                                </FormControl>
+                            )}
+                            name="repeatPassword"
+                        />
 
-                        <Button /* type="submit" */ /* colorScheme="blue" */ /* size="lg" */ /* w="full" */>
-                            Register
+                        <Button
+                            onPress={handleSubmit(onSubmit)}
+                            isDisabled={isLoading}
+                        >
+                            <Text color="$white" fontWeight="$bold">
+                                Register
+                            </Text>
                         </Button>
                     </VStack>
-                </form>
 
-                <Text /* mt={4} */ /* textAlign="center" */>
-                    Already have an account?{' '}
-                    <Link /* color="blue.500" */>
-                        Sign in
-                    </Link>
-                </Text>
+                    <Text mt="$3" textAlign="center">
+                        Already have an account?{" "}
+                        <Link href="/signin">
+                            <Text color="$blue600">Sign in</Text>
+                        </Link>
+                    </Text>
+                </Box>
             </Box>
-        </Box>
-    );
+        </ScrollView>
+    )
 }
