@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, Link } from '@gluestack-ui/themed';
 import { Controller, useForm } from 'react-hook-form';
 import { ScrollView } from 'react-native';
 
+import {app} from "../../firebaseConfig"
+import { initializeApp } from '@firebase/app';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
+
+
 type FormData = {
     email: string;
     username: string;
-    password: string;
+    inputPassword: string;
     repeatPassword: string;
 };
 
@@ -14,14 +19,57 @@ export default function Register() {
     const toast = useToast()
     const { control, handleSubmit, formState: { errors }, watch } = useForm<FormData>()
     const [isLoading, setIsLoading] = useState(false)
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [user, setUser] = useState(null); // Track user authentication state
+    const [isLogin, setIsLogin] = useState(true);
 
-    const password = watch("password")
+    const inputPassword = watch("inputPassword")
+
+    const auth = getAuth(app)
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => unsubscribe();
+    }, [auth]);
+
+    const handleAuthentication = async () => {
+        try {
+          if (user) {
+            // If user is already authenticated, log out
+            console.log('User logged out successfully!');
+            await signOut(auth);
+          } else {
+            // Sign in or sign up
+            if (isLogin) {
+              // Sign in
+              await signInWithEmailAndPassword(auth, email, password);
+              console.log('User signed in successfully!');
+            } else {
+              // Sign up
+              await createUserWithEmailAndPassword(auth, email, password);
+              console.log('User created successfully!');
+            }
+          }
+        } catch (error) {
+          console.error('Authentication error:', error.message);
+        }
+      };
+    
 
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000))
         setIsLoading(false)
+
+        handleAuthentication()
+
+        console.log(email, username, password)
 
         toast.show({
             render: () => {
@@ -81,6 +129,7 @@ export default function Register() {
                                             placeholder="Enter your email"
                                             onBlur={onBlur}
                                             onChangeText={onChange}
+                                            onChange={(e) => setEmail(e.target.value)}
                                             value={value}
                                             keyboardType="email-address"
                                             autoCapitalize="none"
@@ -115,6 +164,7 @@ export default function Register() {
                                             placeholder="Enter your username"
                                             onBlur={onBlur}
                                             onChangeText={onChange}
+                                            onChange={(e) => setUsername(e.target.value)}
                                             value={value}
                                             autoCapitalize="none"
                                         />
@@ -132,40 +182,41 @@ export default function Register() {
                         <Controller
                             control={control}
                             rules={{
-                                required: 'Password is required',
+                                required: 'inputPassword is required',
                                 minLength: {
                                     value: 6,
-                                    message: 'Password must be at least 6 characters',
+                                    message: 'inputPassword must be at least 6 characters',
                                 },
                             }}
                             render={({ field: { onChange, onBlur, value } }) => (
-                                <FormControl isInvalid={!!errors.password}>
+                                <FormControl isInvalid={!!errors.inputPassword}>
                                     <FormControlLabel>
-                                        <FormControlLabelText>Password</FormControlLabelText>
+                                        <FormControlLabelText>inputPassword</FormControlLabelText>
                                     </FormControlLabel>
                                     <Input>
                                         <InputField
-                                            placeholder="Enter your password"
+                                            placeholder="Enter your inputPassword"
                                             onBlur={onBlur}
                                             onChangeText={onChange}
+                                            onChange={(e) => setPassword(e.target.value)}
                                             value={value}
                                             secureTextEntry
                                         />
                                     </Input>
-                                    {errors.password ? (
+                                    {errors.inputPassword ? (
                                         <FormControlHelper>
-                                            <Text color="$error600">{errors.password.message}</Text>
+                                            <Text color="$error600">{errors.inputPassword.message}</Text>
                                         </FormControlHelper>
                                     ) : null}
                                 </FormControl>
                             )}
-                            name="password"
+                            name="inputPassword"
                         />
 
                         <Controller
                             control={control}
                             rules={{
-                                validate: value => value === password || 'Passwords do not match'
+                                validate: value => value === inputPassword || 'Passwords do not match'
                             }}
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <FormControl isInvalid={!!errors.repeatPassword}>

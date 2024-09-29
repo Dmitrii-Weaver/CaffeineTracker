@@ -8,6 +8,7 @@ import { initializeApp } from 'firebase/app';
 // import {...} from "firebase/storage";
 
 // Initialize Firebase
+
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_API_KEY,
   authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
@@ -19,5 +20,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+export {app}
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
