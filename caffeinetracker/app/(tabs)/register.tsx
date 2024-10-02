@@ -4,7 +4,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { ScrollView } from 'react-native';
 
 import {app} from "../../firebaseConfig"
-import { initializeApp } from '@firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
 
 
@@ -23,7 +22,7 @@ export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null); // Track user authentication state
-    const [isLogin, setIsLogin] = useState(true);
+    const [isLogin, setIsLogin] = useState(false);
 
     const inputPassword = watch("inputPassword")
 
