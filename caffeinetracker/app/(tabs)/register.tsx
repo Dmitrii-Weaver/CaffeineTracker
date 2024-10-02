@@ -3,14 +3,15 @@ import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormC
 import { Controller, useForm } from 'react-hook-form';
 import { ScrollView } from 'react-native';
 
-import {app} from "../../firebaseConfig"
+import { app } from "../../firebaseConfig"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
 import useHandleAuth from '@/hooks/useHandleAuth';
+import { User } from 'firebase/auth';
 
 type FormData = {
     email: string;
     username: string;
-    inputPassword: string;
+    password: string;
     repeatPassword: string;
 };
 
@@ -21,13 +22,13 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [user, setUser] = useState(null); // Track user authentication state
+    const [user, setUser] = useState<User | null>(null);
     const [isLogin, setIsLogin] = useState(false);
 
-    const inputPassword = watch("inputPassword")
+    const repeatPassword = watch("repeatPassword")
 
     const auth = getAuth(app)
-    
+
     const handleAuth = useHandleAuth()
 
     useEffect(() => {
@@ -37,7 +38,7 @@ export default function Register() {
 
         return () => unsubscribe();
     }, [auth]);
-    
+
 
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
@@ -106,8 +107,10 @@ export default function Register() {
                                         <InputField
                                             placeholder="Enter your email"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setEmail(text);
+                                            }}
                                             value={value}
                                             keyboardType="email-address"
                                             autoCapitalize="none"
@@ -141,8 +144,10 @@ export default function Register() {
                                         <InputField
                                             placeholder="Enter your username"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
-                                            onChange={(e) => setUsername(e.target.value)}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setUsername(text);
+                                            }}
                                             value={value}
                                             autoCapitalize="none"
                                         />
@@ -160,41 +165,43 @@ export default function Register() {
                         <Controller
                             control={control}
                             rules={{
-                                required: 'inputPassword is required',
+                                required: 'Password is required',
                                 minLength: {
                                     value: 6,
-                                    message: 'inputPassword must be at least 6 characters',
+                                    message: 'Password must be at least 6 characters',
                                 },
                             }}
                             render={({ field: { onChange, onBlur, value } }) => (
-                                <FormControl isInvalid={!!errors.inputPassword}>
+                                <FormControl isInvalid={!!errors.password}>
                                     <FormControlLabel>
-                                        <FormControlLabelText>inputPassword</FormControlLabelText>
+                                        <FormControlLabelText>Password</FormControlLabelText>
                                     </FormControlLabel>
                                     <Input>
                                         <InputField
-                                            placeholder="Enter your inputPassword"
+                                            placeholder="Enter your password"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
-                                            onChange={(e) => setPassword(e.target.value)}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setPassword(text);
+                                            }}
                                             value={value}
                                             secureTextEntry
                                         />
                                     </Input>
-                                    {errors.inputPassword ? (
+                                    {errors.password ? (
                                         <FormControlHelper>
-                                            <Text color="$error600">{errors.inputPassword.message}</Text>
+                                            <Text color="$error600">{errors.password.message}</Text>
                                         </FormControlHelper>
                                     ) : null}
                                 </FormControl>
                             )}
-                            name="inputPassword"
+                            name="password"
                         />
 
                         <Controller
                             control={control}
                             rules={{
-                                validate: value => value === inputPassword || 'Passwords do not match'
+                                validate: value => value === password || 'Passwords do not match'
                             }}
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <FormControl isInvalid={!!errors.repeatPassword}>
@@ -230,7 +237,7 @@ export default function Register() {
                         </Button>
                     </VStack>
 
-                    <Text mt="$3" textAlign="center">
+                    <Text mt="$4" textAlign="center">
                         Already have an account?{" "}
                         <Link href="/signin">
                             <Text color="$blue600">Sign in</Text>
