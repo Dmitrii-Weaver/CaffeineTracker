@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { ScrollView } from 'react-native'
 
 import { app } from "../../firebaseConfig"
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from '@firebase/auth';
 import useHandleAuth from '@/hooks/useHandleAuth'
 
 type FormData = {
@@ -19,7 +19,7 @@ export default function SignIn() {
     const { control, handleSubmit, formState: { errors } } = useForm<FormData>()
     const [isLoading, setIsLoading] = useState(false)
 
-    const [user, setUser] = useState(null); // Track user authentication state
+    const [user, setUser] = useState<User | null>(null); // Track user authentication state
     const [isLogin, setIsLogin] = useState(true);
 
     const auth = getAuth(app)
@@ -81,7 +81,7 @@ export default function SignIn() {
                     <Heading fontSize={25} marginBottom={4} textAlign="center">
                         Welcome to Caffeine Tracker!
                     </Heading>
-                    {(user == null ? (<></>) : (<><Text>Logged in as {user.email} </Text> <Button onPress={()=>handleAuth(user, auth, isLogin, email, password, "")}>Logout</Button></>))}
+                    {(user == null ? (<></>) : (<><Text>Logged in as {user.email} </Text> <Button onPress={() => handleAuth(user, auth, isLogin, email, password, "")}>Logout</Button></>))}
 
                     <VStack space="md" >
                         <Controller
@@ -102,8 +102,10 @@ export default function SignIn() {
                                         <InputField
                                             placeholder="Enter your email"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setEmail(text);
+                                            }}
                                             value={value}
                                             keyboardType="email-address"
                                             autoCapitalize="none"
@@ -137,9 +139,10 @@ export default function SignIn() {
                                         <InputField
                                             placeholder="Enter your password"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            value={value}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setPassword(text);
+                                            }}
                                             secureTextEntry
                                         />
                                     </Input>
