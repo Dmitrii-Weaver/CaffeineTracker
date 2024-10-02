@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native'
 
 import { app } from "../../firebaseConfig"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
+import useHandleAuth from '@/hooks/useHandleAuth'
 
 type FormData = {
     email: string;
@@ -23,6 +24,8 @@ export default function SignIn() {
 
     const auth = getAuth(app)
 
+    const handleAuth = useHandleAuth()
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
@@ -33,36 +36,13 @@ export default function SignIn() {
 
     console.log(user)
 
-    const handleAuthentication = async () => {
-        try {
-            if (user) {
-                // If user is already authenticated, log out
-                console.log('User logged out successfully!');
-                await signOut(auth);
-            } else {
-                // Sign in or sign up
-                if (isLogin) {
-                    // Sign in
-                    await signInWithEmailAndPassword(auth, email, password);
-                    console.log('User signed in successfully!');
-                } else {
-                    // Sign up
-                    await createUserWithEmailAndPassword(auth, email, password);
-                    console.log('User created successfully!');
-                }
-            }
-        } catch (error) {
-            console.error('Authentication error:', error.message);
-        }
-    };
-
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000))
         setIsLoading(false)
 
-        handleAuthentication()
+        handleAuth(user, auth, isLogin, email, password, "")
 
         toast.show({
             render: () => {
@@ -101,7 +81,7 @@ export default function SignIn() {
                     <Heading fontSize={25} marginBottom={4} textAlign="center">
                         Welcome to Caffeine Tracker!
                     </Heading>
-                    {(user == null ? (<></>) : (<><Text>Logged in as {user.email} </Text> <Button onPress={()=>handleAuthentication()}>Logout</Button></>))}
+                    {(user == null ? (<></>) : (<><Text>Logged in as {user.email} </Text> <Button onPress={()=>handleAuth(user, auth, isLogin, email, password, "")}>Logout</Button></>))}
 
                     <VStack space="md" >
                         <Controller

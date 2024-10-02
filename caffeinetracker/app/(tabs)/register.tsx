@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 
 import {app} from "../../firebaseConfig"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
-
+import useHandleAuth from '@/hooks/useHandleAuth';
 
 type FormData = {
     email: string;
@@ -27,6 +27,8 @@ export default function Register() {
     const inputPassword = watch("inputPassword")
 
     const auth = getAuth(app)
+    
+    const handleAuth = useHandleAuth()
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -35,29 +37,6 @@ export default function Register() {
 
         return () => unsubscribe();
     }, [auth]);
-
-    const handleAuthentication = async () => {
-        try {
-          if (user) {
-            // If user is already authenticated, log out
-            console.log('User logged out successfully!');
-            await signOut(auth);
-          } else {
-            // Sign in or sign up
-            if (isLogin) {
-              // Sign in
-              await signInWithEmailAndPassword(auth, email, password);
-              console.log('User signed in successfully!');
-            } else {
-              // Sign up
-              await createUserWithEmailAndPassword(auth, email, password);
-              console.log('User created successfully!');
-            }
-          }
-        } catch (error) {
-          console.error('Authentication error:', error.message);
-        }
-      };
     
 
     const onSubmit = async (data: FormData) => {
@@ -66,7 +45,7 @@ export default function Register() {
         await new Promise(resolve => setTimeout(resolve, 1000))
         setIsLoading(false)
 
-        handleAuthentication()
+        handleAuth(user, auth, isLogin, email, password, username)
 
         console.log(email, username, password)
 
