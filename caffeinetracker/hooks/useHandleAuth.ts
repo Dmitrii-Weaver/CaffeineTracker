@@ -27,8 +27,7 @@ const useHandleAuth = () => {
                         uid: newUser.user.uid,
                         email: newUser.user.email,
                         username: username,
-                        coffees: {
-                        }
+                        coffees: []
                     }
                     await setDoc(doc(firestore, "users", newUser.user.uid), userDoc)
                     localStorage.setItem("user-info", JSON.stringify(userDoc))
