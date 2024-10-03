@@ -42,7 +42,7 @@ const Log = () => {
     }
 
     let coffeeStamp = {
-      UID: "1",
+      UID: "1" ,
       timestamp: {
         fulldate: datetime,
         year: currentdate.getFullYear(),
@@ -56,8 +56,14 @@ const Log = () => {
       decaf: coffeeDecaf
     }
 
+    if(user != null){
+      coffeeStamp.UID = user.uid
+    }
+
     return (coffeeStamp)
   }
+
+
 
   const handleCostInput = (i: string) => {
     var x = parseInt(i, 10)
