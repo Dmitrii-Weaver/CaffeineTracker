@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
-import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, Link } from '@gluestack-ui/themed'
+import React, { useEffect, useState } from 'react'
+import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, Link, ButtonText } from '@gluestack-ui/themed'
 import { Controller, useForm } from 'react-hook-form'
 import { ScrollView } from 'react-native'
+
+import { app } from "../../firebaseConfig"
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from '@firebase/auth';
+import useHandleAuth from '@/hooks/useHandleAuth'
 
 type FormData = {
     email: string;
@@ -10,14 +14,35 @@ type FormData = {
 
 export default function SignIn() {
     const toast = useToast()
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const { control, handleSubmit, formState: { errors } } = useForm<FormData>()
     const [isLoading, setIsLoading] = useState(false)
+
+    const [user, setUser] = useState<User | null>(null); // Track user authentication state
+    const [isLogin, setIsLogin] = useState(true);
+
+    const auth = getAuth(app)
+
+    const handleAuth = useHandleAuth()
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => unsubscribe();
+    }, [auth]);
+
+    console.log(user)
 
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000))
         setIsLoading(false)
+
+        handleAuth(user, auth, isLogin, email, password, "")
 
         toast.show({
             render: () => {
@@ -56,6 +81,14 @@ export default function SignIn() {
                     <Heading fontSize={25} marginBottom={4} textAlign="center">
                         Welcome to Caffeine Tracker!
                     </Heading>
+                    {user ? (
+                        <Box>
+                            <Text>Logged in as {user.email}</Text>
+                            <Button onPress={() => handleAuth(user, auth, isLogin, email, password, "")}>
+                                <ButtonText>Logout</ButtonText>
+                            </Button>
+                        </Box>
+                    ) : null}
 
                     <VStack space="md" >
                         <Controller
@@ -76,7 +109,10 @@ export default function SignIn() {
                                         <InputField
                                             placeholder="Enter your email"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setEmail(text);
+                                            }}
                                             value={value}
                                             keyboardType="email-address"
                                             autoCapitalize="none"
@@ -110,8 +146,10 @@ export default function SignIn() {
                                         <InputField
                                             placeholder="Enter your password"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
-                                            value={value}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setPassword(text);
+                                            }}
                                             secureTextEntry
                                         />
                                     </Input>

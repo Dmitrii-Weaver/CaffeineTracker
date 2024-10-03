@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, Link } from '@gluestack-ui/themed';
 import { Controller, useForm } from 'react-hook-form';
 import { ScrollView } from 'react-native';
+
+import { app } from "../../firebaseConfig"
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
+import useHandleAuth from '@/hooks/useHandleAuth';
+import { User } from 'firebase/auth';
 
 type FormData = {
     email: string;
@@ -14,14 +19,36 @@ export default function Register() {
     const toast = useToast()
     const { control, handleSubmit, formState: { errors }, watch } = useForm<FormData>()
     const [isLoading, setIsLoading] = useState(false)
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [user, setUser] = useState<User | null>(null);
+    const [isLogin, setIsLogin] = useState(false);
 
-    const password = watch("password")
+    const repeatPassword = watch("repeatPassword")
+
+    const auth = getAuth(app)
+
+    const handleAuth = useHandleAuth()
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => unsubscribe();
+    }, [auth]);
+
 
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000))
         setIsLoading(false)
+
+        handleAuth(user, auth, isLogin, email, password, username)
+
+        console.log(email, username, password)
 
         toast.show({
             render: () => {
@@ -80,7 +107,10 @@ export default function Register() {
                                         <InputField
                                             placeholder="Enter your email"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setEmail(text);
+                                            }}
                                             value={value}
                                             keyboardType="email-address"
                                             autoCapitalize="none"
@@ -114,7 +144,10 @@ export default function Register() {
                                         <InputField
                                             placeholder="Enter your username"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setUsername(text);
+                                            }}
                                             value={value}
                                             autoCapitalize="none"
                                         />
@@ -147,7 +180,10 @@ export default function Register() {
                                         <InputField
                                             placeholder="Enter your password"
                                             onBlur={onBlur}
-                                            onChangeText={onChange}
+                                            onChangeText={(text) => {
+                                                onChange(text);
+                                                setPassword(text);
+                                            }}
                                             value={value}
                                             secureTextEntry
                                         />
@@ -201,7 +237,7 @@ export default function Register() {
                         </Button>
                     </VStack>
 
-                    <Text mt="$3" textAlign="center">
+                    <Text mt="$4" textAlign="center">
                         Already have an account?{" "}
                         <Link href="/signin">
                             <Text color="$blue600">Sign in</Text>

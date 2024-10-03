@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, Heading, Input, InputField, VStack, Text, Icon, HStack, Select, SelectTrigger, SelectInput, SelectIcon, SelectPortal, SelectBackdrop, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, SelectItem, Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel, ButtonText } from '@gluestack-ui/themed'
 import { ScrollView } from 'react-native'
 import { ChevronDownIcon, CheckIcon } from '@gluestack-ui/themed'
 import { FiCoffee } from "react-icons/fi"
 import { RiArrowDownWideFill, RiArrowUpWideFill } from "react-icons/ri"
 import { FaChartBar } from "react-icons/fa"
+import useLogCoffee from '@/hooks/useLogCoffee'
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
+import { app } from "../../firebaseConfig"
 
 const Log = () => {
   const [showInputForm, setShowInputForm] = useState(false)
@@ -12,6 +15,18 @@ const Log = () => {
   const [coffeeCost, setCoffeeCost] = useState(0)
   const [coffeeCostCurrency, setCoffeeCostCurrency] = useState("EUR")
   const [coffeeDecaf, setCoffeeDecaf] = useState(false)
+
+  const auth = getAuth(app)
+
+  const [user, setUser] = useState<User | null>(null); // Track user authentication state
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   const SendCoffeeStamp = () => {
     var currentdate = new Date()
@@ -27,7 +42,7 @@ const Log = () => {
     }
 
     let coffeeStamp = {
-      UID: "1",
+      UID: "1" ,
       timestamp: {
         fulldate: datetime,
         year: currentdate.getFullYear(),
@@ -41,8 +56,14 @@ const Log = () => {
       decaf: coffeeDecaf
     }
 
-    console.log(coffeeStamp)
+    if(user != null){
+      coffeeStamp.UID = user.uid
+    }
+
+    return (coffeeStamp)
   }
+
+
 
   const handleCostInput = (i: string) => {
     var x = parseInt(i, 10)
@@ -55,6 +76,12 @@ const Log = () => {
 
   const handleDecafChange = () => {
     setCoffeeDecaf(!coffeeDecaf)
+  }
+
+  const logCoffee = useLogCoffee()
+
+  const handleLog = () => {
+    logCoffee(user, SendCoffeeStamp())
   }
 
   return (
@@ -91,7 +118,7 @@ const Log = () => {
             <Heading size="lg">Cups of coffee had today: 4</Heading>
             <Text>Delicious!</Text>
 
-            <Button onPress={SendCoffeeStamp}>
+            <Button onPress={handleLog} >
               <HStack space="sm" alignItems="center">
                 <ButtonText>Coffee had! +</ButtonText>
                 {/* <Icon as={FiCoffee} /> */}
