@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, Link } from '@gluestack-ui/themed'
+import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, Link, ButtonText } from '@gluestack-ui/themed'
 import { Controller, useForm } from 'react-hook-form'
 import { ScrollView } from 'react-native'
 
@@ -81,7 +81,7 @@ export default function SignIn() {
                     <Heading fontSize={25} marginBottom={4} textAlign="center">
                         Welcome to Caffeine Tracker!
                     </Heading>
-                    {(user == null ? (<></>) : (<><Text>Logged in as {user.email} </Text> <Button onPress={() => handleAuth(user, auth, isLogin, email, password, "")}>Logout</Button></>))}
+                    {(user == null ? (<></>) : (<><Text>Logged in as {user.email} </Text> <Button onPress={() => handleAuth(user, auth, isLogin, email, password, "")}><ButtonText>Logout</ButtonText></Button></>))}
 
                     <VStack space="md" >
                         <Controller
