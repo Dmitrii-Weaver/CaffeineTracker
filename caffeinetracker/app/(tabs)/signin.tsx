@@ -81,7 +81,14 @@ export default function SignIn() {
                     <Heading fontSize={25} marginBottom={4} textAlign="center">
                         Welcome to Caffeine Tracker!
                     </Heading>
-                    {(user == null ? (<></>) : (<><Text>Logged in as {user.email} </Text> <Button onPress={() => handleAuth(user, auth, isLogin, email, password, "")}><ButtonText>Logout</ButtonText></Button></>))}
+                    {user ? (
+                        <Box>
+                            <Text>Logged in as {user.email}</Text>
+                            <Button onPress={() => handleAuth(user, auth, isLogin, email, password, "")}>
+                                <ButtonText>Logout</ButtonText>
+                            </Button>
+                        </Box>
+                    ) : null}
 
                     <VStack space="md" >
                         <Controller
