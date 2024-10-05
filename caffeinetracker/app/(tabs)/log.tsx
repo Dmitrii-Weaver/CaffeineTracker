@@ -8,6 +8,7 @@ import { FaChartBar } from "react-icons/fa"
 import useLogCoffee from '@/hooks/useLogCoffee'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
+import { Redirect } from 'expo-router'
 
 const Log = () => {
   const [showInputForm, setShowInputForm] = useState(false)
@@ -28,6 +29,8 @@ const Log = () => {
     return () => unsubscribe();
   }, [auth]);
 
+  //if (user == null) {return <Redirect href="/signin" />}
+
   const SendCoffeeStamp = () => {
     var currentdate = new Date()
     var datetime = currentdate.getDate() + "/"
@@ -42,7 +45,7 @@ const Log = () => {
     }
 
     let coffeeStamp = {
-      UID: "1" ,
+      UID: "1",
       timestamp: {
         fulldate: datetime,
         year: currentdate.getFullYear(),
@@ -56,7 +59,7 @@ const Log = () => {
       decaf: coffeeDecaf
     }
 
-    if(user != null){
+    if (user != null) {
       coffeeStamp.UID = user.uid
     }
 
@@ -85,6 +88,7 @@ const Log = () => {
   }
 
   return (
+
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <Box
         flex={1}
@@ -107,69 +111,36 @@ const Log = () => {
           shadowRadius={3.84}
           elevation={5}
         >
-          <VStack space="md">
-            <Heading size="xl" textAlign="center">
-              Caffeine Tracker
-            </Heading>
-            <Text textAlign="center">
-              Monitor your coffee drinking habit with one click!
-            </Text>
+          {user ? (
+            <VStack space="md">
+              <Heading size="xl" textAlign="center">
+                Caffeine Tracker
+              </Heading>
+              <Text textAlign="center">
+                Monitor your coffee drinking habit with one click!
+              </Text>
 
-            <Heading size="lg">Cups of coffee had today: 4</Heading>
-            <Text>Delicious!</Text>
+              <Heading size="lg">Cups of coffee had today: 4</Heading>
+              <Text>Delicious!</Text>
 
-            <Button onPress={handleLog} >
-              <HStack space="sm" alignItems="center">
-                <ButtonText>Coffee had! +</ButtonText>
-                {/* <Icon as={FiCoffee} /> */}
-              </HStack>
-            </Button>
+              <Button onPress={handleLog} >
+                <HStack space="sm" alignItems="center">
+                  <ButtonText>Coffee had! +</ButtonText>
+                  {/* <Icon as={FiCoffee} /> */}
+                </HStack>
+              </Button>
 
-            {showInputForm ? (
-              <VStack space="md">
-                <Select
-                  onValueChange={(value: string) => setCoffeeType(value)}
-                  selectedValue={coffeeType}
-                >
-                  <SelectTrigger>
-                    <SelectInput placeholder="Type" />
-                    {/* <SelectIcon mr="$3">
-                      <Icon as={ChevronDownIcon} />
-                    </SelectIcon> */}
-                  </SelectTrigger>
-                  <SelectPortal>
-                    <SelectBackdrop />
-                    <SelectContent>
-                      <SelectDragIndicatorWrapper>
-                        <SelectDragIndicator />
-                      </SelectDragIndicatorWrapper>
-                      <SelectItem label="Black" value="black" />
-                      <SelectItem label="Black with milk" value="black with milk" />
-                      <SelectItem label="Espresso" value="espresso" />
-                      <SelectItem label="Double espresso" value="double espresso" />
-                      <SelectItem label="Latte" value="latte" />
-                      <SelectItem label="Cappuccino" value="cappuccino" />
-                    </SelectContent>
-                  </SelectPortal>
-                </Select>
-
-                <HStack space="md">
-                  <Input flex={1}>
-                    <InputField
-                      placeholder="Cost"
-                      keyboardType="numeric"
-                      onChangeText={handleCostInput}
-                    />
-                  </Input>
+              {showInputForm ? (
+                <VStack space="md">
                   <Select
-                    onValueChange={(value: string) => setCoffeeCostCurrency(value)}
-                    selectedValue={coffeeCostCurrency}
+                    onValueChange={(value: string) => setCoffeeType(value)}
+                    selectedValue={coffeeType}
                   >
                     <SelectTrigger>
-                      <SelectInput placeholder="Currency" />
+                      <SelectInput placeholder="Type" />
                       {/* <SelectIcon mr="$3">
-                        <Icon as={ChevronDownIcon} />
-                      </SelectIcon> */}
+                      <Icon as={ChevronDownIcon} />
+                    </SelectIcon> */}
                     </SelectTrigger>
                     <SelectPortal>
                       <SelectBackdrop />
@@ -177,46 +148,86 @@ const Log = () => {
                         <SelectDragIndicatorWrapper>
                           <SelectDragIndicator />
                         </SelectDragIndicatorWrapper>
-                        <SelectItem label="€" value="EUR" />
-                        <SelectItem label="$" value="USD" />
-                        <SelectItem label="₽" value="RUB" />
+                        <SelectItem label="Black" value="black" />
+                        <SelectItem label="Black with milk" value="black with milk" />
+                        <SelectItem label="Espresso" value="espresso" />
+                        <SelectItem label="Double espresso" value="double espresso" />
+                        <SelectItem label="Latte" value="latte" />
+                        <SelectItem label="Cappuccino" value="cappuccino" />
                       </SelectContent>
                     </SelectPortal>
                   </Select>
+
+                  <HStack space="md">
+                    <Input flex={1}>
+                      <InputField
+                        placeholder="Cost"
+                        keyboardType="numeric"
+                        onChangeText={handleCostInput}
+                      />
+                    </Input>
+                    <Select
+                      onValueChange={(value: string) => setCoffeeCostCurrency(value)}
+                      selectedValue={coffeeCostCurrency}
+                    >
+                      <SelectTrigger>
+                        <SelectInput placeholder="Currency" />
+                        {/* <SelectIcon mr="$3">
+                        <Icon as={ChevronDownIcon} />
+                      </SelectIcon> */}
+                      </SelectTrigger>
+                      <SelectPortal>
+                        <SelectBackdrop />
+                        <SelectContent>
+                          <SelectDragIndicatorWrapper>
+                            <SelectDragIndicator />
+                          </SelectDragIndicatorWrapper>
+                          <SelectItem label="€" value="EUR" />
+                          <SelectItem label="$" value="USD" />
+                          <SelectItem label="₽" value="RUB" />
+                        </SelectContent>
+                      </SelectPortal>
+                    </Select>
+                  </HStack>
+
+                  <HStack space="md" alignItems="center">
+                    <Text>Decaf?</Text>
+                    <Checkbox
+                      value="decaf"
+                      isChecked={coffeeDecaf}
+                      onChange={handleDecafChange}
+                    >
+                      <CheckboxIndicator mr="$2">
+                        <CheckboxIcon as={CheckIcon} />
+                      </CheckboxIndicator>
+                      <CheckboxLabel>Decaf</CheckboxLabel>
+                    </Checkbox>
+                  </HStack>
+                </VStack>
+              ) : null}
+
+              <Button onPress={() => setShowInputForm(!showInputForm)}>
+                <HStack space="sm" alignItems="center">
+                  <ButtonText>Detailed tracking</ButtonText>
+                  {/* <Icon as={showInputForm ? RiArrowUpWideFill : RiArrowDownWideFill} /> */}
                 </HStack>
+              </Button>
 
-                <HStack space="md" alignItems="center">
-                  <Text>Decaf?</Text>
-                  <Checkbox
-                    value="decaf"
-                    isChecked={coffeeDecaf}
-                    onChange={handleDecafChange}
-                  >
-                    <CheckboxIndicator mr="$2">
-                      <CheckboxIcon as={CheckIcon} />
-                    </CheckboxIndicator>
-                    <CheckboxLabel>Decaf</CheckboxLabel>
-                  </Checkbox>
+              <Heading size="lg">Cups of coffee this week: 42</Heading>
+
+              <Button>
+                <HStack space="sm" alignItems="center">
+                  <ButtonText>See stats!</ButtonText>
+                  {/* <Icon as={FaChartBar} /> */}
                 </HStack>
-              </VStack>
-            ) : null}
+              </Button>
+            </VStack>
 
-            <Button onPress={() => setShowInputForm(!showInputForm)}>
-              <HStack space="sm" alignItems="center">
-                <ButtonText>Detailed tracking</ButtonText>
-                {/* <Icon as={showInputForm ? RiArrowUpWideFill : RiArrowDownWideFill} /> */}
-              </HStack>
-            </Button>
+          ) : <VStack space="md">
+              <Text>Please sign in to start tracking</Text>
+            </VStack>}
 
-            <Heading size="lg">Cups of coffee this week: 42</Heading>
 
-            <Button>
-              <HStack space="sm" alignItems="center">
-                <ButtonText>See stats!</ButtonText>
-                {/* <Icon as={FaChartBar} /> */}
-              </HStack>
-            </Button>
-          </VStack>
         </Box>
       </Box>
     </ScrollView>
