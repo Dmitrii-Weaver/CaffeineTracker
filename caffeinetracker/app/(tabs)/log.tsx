@@ -224,8 +224,13 @@ const Log = () => {
             </VStack>
 
           ) : <VStack space="md">
-              <Text>Please sign in to start tracking</Text>
-            </VStack>}
+            <Text>Please sign in to start tracking</Text>
+            <Box>
+              <Button >
+                <ButtonText><Redirect href="/signin" /></ButtonText>
+              </Button>
+            </Box>
+          </VStack>}
 
 
         </Box>
