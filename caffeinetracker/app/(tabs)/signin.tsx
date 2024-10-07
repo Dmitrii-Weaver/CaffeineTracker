@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native'
 import { app } from "../../firebaseConfig"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from '@firebase/auth';
 import useHandleAuth from '@/hooks/useHandleAuth'
+import { Redirect } from 'expo-router'
 
 type FormData = {
     email: string;
@@ -84,6 +85,7 @@ export default function SignIn() {
                     {user ? (
                         <Box>
                             <Text>Logged in as {user.email}</Text>
+                            <Redirect href="/log" />
                             <Button onPress={() => handleAuth(user, auth, isLogin, email, password, "")}>
                                 <ButtonText>Logout</ButtonText>
                             </Button>
