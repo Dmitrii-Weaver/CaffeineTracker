@@ -9,6 +9,7 @@ import useLogCoffee from '@/hooks/useLogCoffee'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
 import { Redirect } from 'expo-router'
+import useHandleAuth from '@/hooks/useHandleAuth'
 
 const Log = () => {
   const [showInputForm, setShowInputForm] = useState(false)
@@ -18,6 +19,7 @@ const Log = () => {
   const [coffeeDecaf, setCoffeeDecaf] = useState(false)
 
   const auth = getAuth(app)
+  const handleAuth = useHandleAuth()
 
   const [user, setUser] = useState<User | null>(null); // Track user authentication state
 
@@ -87,6 +89,8 @@ const Log = () => {
     logCoffee(user, SendCoffeeStamp())
   }
 
+  console.log(user)
+
   return (
 
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -116,6 +120,9 @@ const Log = () => {
               <Heading size="xl" textAlign="center">
                 Caffeine Tracker
               </Heading>
+              <Text textAlign="center">
+                Logged in as {user.email}
+              </Text>
               <Text textAlign="center">
                 Monitor your coffee drinking habit with one click!
               </Text>
@@ -219,6 +226,11 @@ const Log = () => {
                 <HStack space="sm" alignItems="center">
                   <ButtonText>See stats!</ButtonText>
                   {/* <Icon as={FaChartBar} /> */}
+                </HStack>
+              </Button>
+              <Button onPress={() => handleAuth(user, auth, "", "", "", "")}>
+                <HStack space="sm" alignItems="center">
+                  <ButtonText>Logout</ButtonText>
                 </HStack>
               </Button>
             </VStack>
