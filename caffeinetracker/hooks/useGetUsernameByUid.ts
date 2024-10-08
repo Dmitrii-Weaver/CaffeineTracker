@@ -1,30 +1,29 @@
 import { firestore } from '@/firebaseConfig';
 import { User } from 'firebase/auth';
-import { arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
 
-const useLogCoffee = () => {
+const useGetUsernameByUid = (user: any) => {
     const [isUpdating, setIsUpdating] = useState(false)
+    const [username, setUsername] = useState ("")
 
-    const logCoffee = async (user: any, newCoffeeData: any) => {
-
-
+    const getUsernameByUid = async (user: any,) => {
         if (isUpdating || user == null) return
+
         setIsUpdating(true)
 
         const docRef = doc(firestore, "users", user.uid);
         const docSnap = await getDoc(docRef);
-        
-        
-
-        await updateDoc(docRef, {
-            coffees: arrayUnion(newCoffeeData)
-        });
+        setUsername(docSnap.data()?.username)
 
         setIsUpdating(false)
 
+        return username
     }
-    return logCoffee
+
+    getUsernameByUid(user)
+
+    return {username}
 }
 
-export default useLogCoffee
+export default useGetUsernameByUid

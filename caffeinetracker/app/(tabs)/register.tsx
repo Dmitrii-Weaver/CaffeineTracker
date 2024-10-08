@@ -48,8 +48,6 @@ export default function Register() {
 
         handleAuth(user, auth, isLogin, email, password, username)
 
-        console.log(email, username, password)
-
         toast.show({
             render: () => {
                 return (

@@ -35,7 +35,6 @@ export default function SignIn() {
         return () => unsubscribe();
     }, [auth]);
 
-    console.log(user)
 
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
