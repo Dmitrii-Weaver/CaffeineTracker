@@ -10,6 +10,8 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
 import { Redirect } from 'expo-router'
 import useHandleAuth from '@/hooks/useHandleAuth'
+import useGetUsernameByUid from '@/hooks/useGetUsernameByUid'
+import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
 
 const Log = () => {
   const [showInputForm, setShowInputForm] = useState(false)
@@ -20,8 +22,12 @@ const Log = () => {
 
   const auth = getAuth(app)
   const handleAuth = useHandleAuth()
+  
 
   const [user, setUser] = useState<User | null>(null); // Track user authentication state
+
+  const username = useGetUsernameByUid(user)
+  const coffeeData = useGetCoffeeDataByUid(user)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -31,7 +37,6 @@ const Log = () => {
     return () => unsubscribe();
   }, [auth]);
 
-  //if (user == null) {return <Redirect href="/signin" />}
 
   const SendCoffeeStamp = () => {
     var currentdate = new Date()
@@ -87,9 +92,9 @@ const Log = () => {
 
   const handleLog = () => {
     logCoffee(user, SendCoffeeStamp())
+    console.log(coffeeData)
   }
 
-  console.log(user)
 
   return (
 
@@ -121,7 +126,7 @@ const Log = () => {
                 Caffeine Tracker
               </Heading>
               <Text textAlign="center">
-                Logged in as {user.email}
+                Logged in as {username.username}
               </Text>
               <Text textAlign="center">
                 Monitor your coffee drinking habit with one click!
