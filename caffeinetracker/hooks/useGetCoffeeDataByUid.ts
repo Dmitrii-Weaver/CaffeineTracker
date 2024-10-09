@@ -1,28 +1,35 @@
 import { firestore } from '@/firebaseConfig';
 import { User } from 'firebase/auth';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import React, { useState } from 'react'
+import { doc, getDoc } from 'firebase/firestore';
+import { useState, useEffect, useCallback } from 'react';
 
-const useGetCoffeeDataByUid = (user: any,) => {
-    const [isUpdating, setIsUpdating] = useState(false)
-    const [coffeeData, setCoffeeData] = useState({})
+const useGetCoffeeDataByUid = (user: User | null) => {
+    const [coffeeData, setCoffeeData] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
 
-    const getCoffeeData = async (user: any,) => {
-        if (isUpdating || user == null) return
+    const getCoffeeData = useCallback(async () => {
+        if (!user) return;
 
-        setIsUpdating(true)
+        setIsLoading(true);
+        setError(null);
 
-        const docRef = doc(firestore, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        setCoffeeData(docSnap.data()?.coffees)
+        try {
+            const docRef = doc(firestore, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+            setCoffeeData(docSnap.data()?.coffees || null);
+        } catch (err) {
+            setError(err instanceof Error ? err : new Error('An error occurred'));
+        } finally {
+            setIsLoading(false);
+        }
+    }, [user]);
 
-        setIsUpdating(false)
-    }
+    useEffect(() => {
+        getCoffeeData();
+    }, [getCoffeeData]);
 
-    getCoffeeData(user)
+    return { coffeeData, isLoading, error, refetch: getCoffeeData };
+};
 
-    return {  coffeeData }
-    
-}
-
-export default useGetCoffeeDataByUid
+export default useGetCoffeeDataByUid;
