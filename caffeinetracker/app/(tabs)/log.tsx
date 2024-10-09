@@ -22,12 +22,11 @@ const Log = () => {
 
   const auth = getAuth(app)
   const handleAuth = useHandleAuth()
-  
 
-  const [user, setUser] = useState<User | null>(null); // Track user authentication state
+  const [user, setUser] = useState<User | null>(null);
 
-  const username = useGetUsernameByUid(user)
-  const coffeeData = useGetCoffeeDataByUid(user)
+  const { username, isLoading: usernameLoading, error: usernameError } = useGetUsernameByUid(user)
+  const { coffeeData, isLoading: coffeeDataLoading, error: coffeeDataError } = useGetCoffeeDataByUid(user)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -125,9 +124,15 @@ const Log = () => {
               <Heading size="xl" textAlign="center">
                 Caffeine Tracker
               </Heading>
-              <Text textAlign="center">
-                Logged in as {username.username}
-              </Text>
+              {usernameLoading ? (
+                <Text textAlign="center">Loading username...</Text>
+              ) : usernameError ? (
+                <Text textAlign="center">Error loading username</Text>
+              ) : (
+                <Text textAlign="center">
+                  Logged in as {username}
+                </Text>
+              )}
               <Text textAlign="center">
                 Monitor your coffee drinking habit with one click!
               </Text>
@@ -233,6 +238,16 @@ const Log = () => {
                   {/* <Icon as={FaChartBar} /> */}
                 </HStack>
               </Button>
+              {coffeeDataLoading ? (
+                <Text>Loading coffee data...</Text>
+              ) : coffeeDataError ? (
+                <Text>Error loading coffee data</Text>
+              ) : (
+                <>
+                  <Heading size="lg">Cups of coffee had today: {coffeeData ? coffeeData.length : 0}</Heading>
+                  {/* You might want to add more detailed display of coffee data here */}
+                </>
+              )}
               <Button onPress={() => handleAuth(user, auth, "", "", "", "")}>
                 <HStack space="sm" alignItems="center">
                   <ButtonText>Logout</ButtonText>

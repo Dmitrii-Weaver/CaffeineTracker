@@ -1,29 +1,35 @@
 import { firestore } from '@/firebaseConfig';
 import { User } from 'firebase/auth';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import React, { useState } from 'react'
+import { doc, getDoc } from 'firebase/firestore';
+import { useState, useEffect, useCallback } from 'react';
 
-const useGetUsernameByUid = (user: any) => {
-    const [isUpdating, setIsUpdating] = useState(false)
-    const [username, setUsername] = useState ("")
+const useGetUsernameByUid = (user: User | null) => {
+    const [username, setUsername] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
 
-    const getUsernameByUid = async (user: any,) => {
-        if (isUpdating || user == null) return
+    const getUsernameByUid = useCallback(async () => {
+        if (!user) return;
 
-        setIsUpdating(true)
+        setIsLoading(true);
+        setError(null);
 
-        const docRef = doc(firestore, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        setUsername(docSnap.data()?.username)
+        try {
+            const docRef = doc(firestore, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+            setUsername(docSnap.data()?.username || null);
+        } catch (err) {
+            setError(err instanceof Error ? err : new Error('An error occurred'));
+        } finally {
+            setIsLoading(false);
+        }
+    }, [user]);
 
-        setIsUpdating(false)
+    useEffect(() => {
+        getUsernameByUid();
+    }, [getUsernameByUid]);
 
-        return username
-    }
+    return { username, isLoading, error, refetch: getUsernameByUid };
+};
 
-    getUsernameByUid(user)
-
-    return {username}
-}
-
-export default useGetUsernameByUid
+export default useGetUsernameByUid;
