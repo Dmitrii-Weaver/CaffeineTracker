@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, Link } from '@gluestack-ui/themed';
+import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, ButtonText } from '@gluestack-ui/themed';
 import { Controller, useForm } from 'react-hook-form';
 import { ScrollView } from 'react-native';
 
-import { app } from "../../firebaseConfig"
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
+import { app } from "../firebaseConfig"
+import { getAuth, onAuthStateChanged, User } from '@firebase/auth';
 import useHandleAuth from '@/hooks/useHandleAuth';
-import { User } from 'firebase/auth';
 
 type FormData = {
     email: string;
@@ -15,7 +14,11 @@ type FormData = {
     repeatPassword: string;
 };
 
-export default function Register() {
+type RegisterProps = {
+    onBackToSignIn: () => void;
+}
+
+export default function Register({ onBackToSignIn }: RegisterProps) {
     const toast = useToast()
     const { control, handleSubmit, formState: { errors }, watch } = useForm<FormData>()
     const [isLoading, setIsLoading] = useState(false)
@@ -23,12 +26,9 @@ export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState<User | null>(null);
-    const [isLogin, setIsLogin] = useState(false);
-
-    const repeatPassword = watch("repeatPassword")
+    const [isLogin] = useState(false);
 
     const auth = getAuth(app)
-
     const handleAuth = useHandleAuth()
 
     useEffect(() => {
@@ -38,7 +38,6 @@ export default function Register() {
 
         return () => unsubscribe();
     }, [auth]);
-
 
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
@@ -114,11 +113,11 @@ export default function Register() {
                                             autoCapitalize="none"
                                         />
                                     </Input>
-                                    {errors.email ? (
+                                    {errors.email && (
                                         <FormControlHelper>
                                             <Text color="$error600">{errors.email.message}</Text>
                                         </FormControlHelper>
-                                    ) : null}
+                                    )}
                                 </FormControl>
                             )}
                             name="email"
@@ -150,11 +149,11 @@ export default function Register() {
                                             autoCapitalize="none"
                                         />
                                     </Input>
-                                    {errors.username ? (
+                                    {errors.username && (
                                         <FormControlHelper>
                                             <Text color="$error600">{errors.username.message}</Text>
                                         </FormControlHelper>
-                                    ) : null}
+                                    )}
                                 </FormControl>
                             )}
                             name="username"
@@ -186,11 +185,11 @@ export default function Register() {
                                             secureTextEntry
                                         />
                                     </Input>
-                                    {errors.password ? (
+                                    {errors.password && (
                                         <FormControlHelper>
                                             <Text color="$error600">{errors.password.message}</Text>
                                         </FormControlHelper>
-                                    ) : null}
+                                    )}
                                 </FormControl>
                             )}
                             name="password"
@@ -215,11 +214,11 @@ export default function Register() {
                                             secureTextEntry
                                         />
                                     </Input>
-                                    {errors.repeatPassword ? (
+                                    {errors.repeatPassword && (
                                         <FormControlHelper>
                                             <Text color="$error600">{errors.repeatPassword.message}</Text>
                                         </FormControlHelper>
-                                    ) : null}
+                                    )}
                                 </FormControl>
                             )}
                             name="repeatPassword"
@@ -229,18 +228,15 @@ export default function Register() {
                             onPress={handleSubmit(onSubmit)}
                             isDisabled={isLoading}
                         >
-                            <Text color="$white" fontWeight="$bold">
-                                Register
-                            </Text>
+                            <ButtonText color="$white" fontWeight="$bold">
+                                {isLoading ? "Registering..." : "Register"}
+                            </ButtonText>
+                        </Button>
+
+                        <Button onPress={onBackToSignIn} variant="outline">
+                            <ButtonText>Back to Sign In</ButtonText>
                         </Button>
                     </VStack>
-
-                    <Text mt="$4" textAlign="center">
-                        Already have an account?{" "}
-                        <Link href="/signin">
-                            <Text color="$blue600">Sign in</Text>
-                        </Link>
-                    </Text>
                 </Box>
             </Box>
         </ScrollView>
