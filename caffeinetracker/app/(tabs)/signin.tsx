@@ -59,7 +59,14 @@ export default function SignIn() {
     }
 
     if (showRegister) {
-        return <Register onBackToSignIn={() => setShowRegister(false)} />;
+        return <>
+            {user ? (
+                <Box>
+                    <Redirect href="/log" />
+                </Box>
+            ) : null}
+            <Register onBackToSignIn={() => setShowRegister(false)} />
+        </>;
     }
 
     return (
