@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, Link, ButtonText } from '@gluestack-ui/themed'
+import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, ButtonText } from '@gluestack-ui/themed'
 import { Controller, useForm } from 'react-hook-form'
 import { ScrollView } from 'react-native'
 
@@ -7,6 +7,8 @@ import { app } from "../../firebaseConfig"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from '@firebase/auth';
 import useHandleAuth from '@/hooks/useHandleAuth'
 import { Redirect } from 'expo-router'
+import Register from '@/components/Register'
+import TextWithLink from '@/components/TextWithLink';
 
 type FormData = {
     email: string;
@@ -22,6 +24,7 @@ export default function SignIn() {
 
     const [user, setUser] = useState<User | null>(null); // Track user authentication state
     const [isLogin, setIsLogin] = useState(true);
+    const [showRegister, setShowRegister] = useState(false);
 
     const auth = getAuth(app)
 
@@ -53,6 +56,10 @@ export default function SignIn() {
                 )
             },
         })
+    }
+
+    if (showRegister) {
+        return <Register onBackToSignIn={() => setShowRegister(false)} />;
     }
 
     return (
@@ -174,12 +181,11 @@ export default function SignIn() {
                         </Button>
                     </VStack>
 
-                    <Text marginTop="$3" textAlign="center">
-                        Don't have an account?{" "}
-                        <Link href="/register">
-                            <Text color="$blue600">Sign up</Text>
-                        </Link>
-                    </Text>
+                    <TextWithLink
+                        text="Don't have an account?"
+                        linkText="Register"
+                        onPress={() => setShowRegister(true)}
+                    />
                 </Box>
             </Box>
         </ScrollView>
