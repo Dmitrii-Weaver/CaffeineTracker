@@ -19,6 +19,7 @@ const Log = () => {
   const [coffeeCost, setCoffeeCost] = useState(0)
   const [coffeeCostCurrency, setCoffeeCostCurrency] = useState("EUR")
   const [coffeeDecaf, setCoffeeDecaf] = useState(false)
+  const currentdate = new Date()
 
   const auth = getAuth(app)
   const handleAuth = useHandleAuth()
@@ -28,6 +29,10 @@ const Log = () => {
   const { username, isLoading: usernameLoading, error: usernameError } = useGetUsernameByUid(user)
   const { coffeeData, isLoading: coffeeDataLoading, error: coffeeDataError } = useGetCoffeeDataByUid(user)
 
+  const [dailyCoffeeCount, setDailyCoffeeCount] = useState(0)
+
+
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
@@ -36,9 +41,23 @@ const Log = () => {
     return () => unsubscribe();
   }, [auth]);
 
+  const coffeeCountDay = () => {
+    var today = currentdate.getDate() + "/"
+      + (currentdate.getMonth() + 1) + "/"
+      + currentdate.getFullYear()
+    var coffeesToday = 0
+
+    coffeeData.map((i: any) => {
+      var coffeeDate = i.timestamp.day + "/" + i.timestamp.month + "/" + i.timestamp.year
+      if (today == coffeeDate) {
+        coffeesToday += 1
+      }
+    })
+    return coffeesToday
+  }
+
 
   const SendCoffeeStamp = () => {
-    var currentdate = new Date()
     var datetime = currentdate.getDate() + "/"
       + (currentdate.getMonth() + 1) + "/"
       + currentdate.getFullYear() + " @ "
@@ -90,8 +109,13 @@ const Log = () => {
   const logCoffee = useLogCoffee()
 
   const handleLog = () => {
+    if(dailyCoffeeCount == 0) {
+      setDailyCoffeeCount(coffeeCountDay() + 1)
+    }
+    else {
+      setDailyCoffeeCount(dailyCoffeeCount + 1)
+    }
     logCoffee(user, SendCoffeeStamp())
-    console.log(coffeeData)
   }
 
 
@@ -136,9 +160,6 @@ const Log = () => {
               <Text textAlign="center">
                 Monitor your coffee drinking habit with one click!
               </Text>
-
-              <Heading size="lg">Cups of coffee had today: 4</Heading>
-              <Text>Delicious!</Text>
 
               <Button onPress={handleLog} >
                 <HStack space="sm" alignItems="center">
@@ -223,6 +244,8 @@ const Log = () => {
                 </VStack>
               ) : null}
 
+
+
               <Button onPress={() => setShowInputForm(!showInputForm)}>
                 <HStack space="sm" alignItems="center">
                   <ButtonText>Detailed tracking</ButtonText>
@@ -230,7 +253,8 @@ const Log = () => {
                 </HStack>
               </Button>
 
-              <Heading size="lg">Cups of coffee this week: 42</Heading>
+
+              <Heading size="lg">Cups of coffee had today: {coffeeData ? (dailyCoffeeCount == 0 ? coffeeCountDay() : dailyCoffeeCount) : 0} </Heading>
 
               <Button>
                 <HStack space="sm" alignItems="center">
@@ -238,16 +262,7 @@ const Log = () => {
                   {/* <Icon as={FaChartBar} /> */}
                 </HStack>
               </Button>
-              {coffeeDataLoading ? (
-                <Text>Loading coffee data...</Text>
-              ) : coffeeDataError ? (
-                <Text>Error loading coffee data</Text>
-              ) : (
-                <>
-                  <Heading size="lg">Cups of coffee had today: {coffeeData ? coffeeData.length : 0}</Heading>
-                  {/* You might want to add more detailed display of coffee data here */}
-                </>
-              )}
+
               <Button onPress={() => handleAuth(user, auth, "", "", "", "")}>
                 <HStack space="sm" alignItems="center">
                   <ButtonText>Logout</ButtonText>
