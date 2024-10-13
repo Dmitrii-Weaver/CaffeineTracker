@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, Heading, Input, InputField, VStack, Text, Icon, HStack, Select, SelectTrigger, SelectInput, SelectIcon, SelectPortal, SelectBackdrop, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, SelectItem, Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel, ButtonText } from '@gluestack-ui/themed'
 import { ScrollView } from 'react-native'
-import { ChevronDownIcon, CheckIcon } from '@gluestack-ui/themed'
-import { FiCoffee } from "react-icons/fi"
-import { RiArrowDownWideFill, RiArrowUpWideFill } from "react-icons/ri"
-import { FaChartBar } from "react-icons/fa"
 import useLogCoffee from '@/hooks/useLogCoffee'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
@@ -12,6 +8,13 @@ import { Link, Redirect, router } from 'expo-router'
 import useHandleAuth from '@/hooks/useHandleAuth'
 import useGetUsernameByUid from '@/hooks/useGetUsernameByUid'
 import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
+
+//icons import
+import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { ChevronDownIcon, CheckIcon } from '@gluestack-ui/themed'
+import { RiArrowDownWideFill, RiArrowUpWideFill } from "react-icons/ri"
+import { FaChartBar } from "react-icons/fa"
 
 const Log = () => {
   const [showInputForm, setShowInputForm] = useState(false)
@@ -153,17 +156,22 @@ const Log = () => {
               ) : usernameError ? (
                 <Text textAlign="center">Error loading username</Text>
               ) : (
-                <Text textAlign="center">
-                  Logged in as {username}
-                </Text>
+                <HStack space="sm" alignItems="center" justifyContent='center'>
+                  <Text textAlign="center">
+                    Logged in as {username}
+                  </Text>
+                  <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(user, auth, "", "", "", "")}/>
+                </HStack>
+
               )}
+
               <Text textAlign="center">
                 Monitor your coffee drinking habit with one click!
               </Text>
 
               <Button onPress={handleLog} >
                 <HStack space="sm" alignItems="center">
-                  <ButtonText>Coffee had! +</ButtonText>
+                  <ButtonText textAlignVertical='center'>Coffee had! <MaterialCommunityIcons name="coffee" size={20} color="white" /></ButtonText>
                   {/* <Icon as={FiCoffee} /> */}
                 </HStack>
               </Button>
@@ -256,16 +264,10 @@ const Log = () => {
 
               <Heading size="lg">Cups of coffee had today: {coffeeData ? (dailyCoffeeCount == 0 ? coffeeCountDay() : dailyCoffeeCount) : 0} </Heading>
 
-              <Button onPress={() => {router.replace('/charts');}}>
+              <Button onPress={() => { router.replace('/charts'); }}>
                 <HStack space="sm" alignItems="center">
-                    <ButtonText>  See stats!  </ButtonText>
+                  <ButtonText>  See stats!  </ButtonText>
                   {/* <Icon as={FaChartBar} /> */}
-                </HStack>
-              </Button>
-
-              <Button onPress={() => handleAuth(user, auth, "", "", "", "")}>
-                <HStack space="sm" alignItems="center">
-                  <ButtonText>Logout</ButtonText>
                 </HStack>
               </Button>
             </VStack>
