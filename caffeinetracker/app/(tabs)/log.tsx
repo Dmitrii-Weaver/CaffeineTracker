@@ -8,7 +8,7 @@ import { FaChartBar } from "react-icons/fa"
 import useLogCoffee from '@/hooks/useLogCoffee'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
-import { Redirect } from 'expo-router'
+import { Link, Redirect, router } from 'expo-router'
 import useHandleAuth from '@/hooks/useHandleAuth'
 import useGetUsernameByUid from '@/hooks/useGetUsernameByUid'
 import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
@@ -109,7 +109,7 @@ const Log = () => {
   const logCoffee = useLogCoffee()
 
   const handleLog = () => {
-    if(dailyCoffeeCount == 0) {
+    if (dailyCoffeeCount == 0) {
       setDailyCoffeeCount(coffeeCountDay() + 1)
     }
     else {
@@ -256,9 +256,9 @@ const Log = () => {
 
               <Heading size="lg">Cups of coffee had today: {coffeeData ? (dailyCoffeeCount == 0 ? coffeeCountDay() : dailyCoffeeCount) : 0} </Heading>
 
-              <Button>
+              <Button onPress={() => {router.replace('/charts');}}>
                 <HStack space="sm" alignItems="center">
-                  <ButtonText>See stats!</ButtonText>
+                    <ButtonText>  See stats!  </ButtonText>
                   {/* <Icon as={FaChartBar} /> */}
                 </HStack>
               </Button>
