@@ -1,15 +1,20 @@
-import { Box, Button, ButtonText, ScrollView, VStack } from '@gluestack-ui/themed'
-import { Redirect } from 'expo-router'
+import { Box, Button, ButtonText, Heading, HStack, ScrollView, VStack } from '@gluestack-ui/themed'
+import { Redirect, router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
+import useGetUsernameByUid from '@/hooks/useGetUsernameByUid'
+import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
+import useHandleAuth from '@/hooks/useHandleAuth'
+
 
 const Charts = () => {
 
-  const [user, setUser] = useState<User | null>(null);
 
   const auth = getAuth(app)
+
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -45,16 +50,20 @@ const Charts = () => {
         >
           {user ? (
             <VStack space="md">
+              <Heading size="xl" textAlign="center">
+                Your coffee stats :
+              </Heading>
+              <Button onPress={() => { router.replace('/log'); }}>
+                <HStack space="sm" alignItems="center">
+                  <ButtonText>  Back to log page  </ButtonText>
 
+                </HStack>
+              </Button>
             </VStack>
 
           ) : <VStack space="md">
             <Text>Please sign in to start tracking</Text>
-            <Box>
-              <Button >
-                <ButtonText><Redirect href="/signin" /></ButtonText>
-              </Button>
-            </Box>
+            <Redirect href="/signin" />
           </VStack>}
 
 

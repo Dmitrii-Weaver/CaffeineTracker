@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, Heading, Input, InputField, VStack, Text, Icon, HStack, Select, SelectTrigger, SelectInput, SelectIcon, SelectPortal, SelectBackdrop, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, SelectItem, Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel, ButtonText } from '@gluestack-ui/themed'
+import { Box, Button, Heading, Input, InputField, VStack, Text, Icon, HStack, Select, SelectTrigger, SelectInput, SelectPortal, SelectBackdrop, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, SelectItem, Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel, ButtonText } from '@gluestack-ui/themed'
 import { ScrollView } from 'react-native'
 import useLogCoffee from '@/hooks/useLogCoffee'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
-import { Link, Redirect, router } from 'expo-router'
+import { Redirect, router } from 'expo-router'
 import useHandleAuth from '@/hooks/useHandleAuth'
 import useGetUsernameByUid from '@/hooks/useGetUsernameByUid'
 import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
@@ -12,9 +12,9 @@ import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
 //icons import
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { ChevronDownIcon, CheckIcon } from '@gluestack-ui/themed'
-import { RiArrowDownWideFill, RiArrowUpWideFill } from "react-icons/ri"
-import { FaChartBar } from "react-icons/fa"
+import { CheckIcon } from '@gluestack-ui/themed'
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 
 const Log = () => {
   const [showInputForm, setShowInputForm] = useState(false)
@@ -28,12 +28,10 @@ const Log = () => {
   const handleAuth = useHandleAuth()
 
   const [user, setUser] = useState<User | null>(null);
-
   const { username, isLoading: usernameLoading, error: usernameError } = useGetUsernameByUid(user)
   const { coffeeData, isLoading: coffeeDataLoading, error: coffeeDataError } = useGetCoffeeDataByUid(user)
 
   const [dailyCoffeeCount, setDailyCoffeeCount] = useState(0)
-
 
 
   useEffect(() => {
@@ -58,7 +56,6 @@ const Log = () => {
     })
     return coffeesToday
   }
-
 
   const SendCoffeeStamp = () => {
     var datetime = currentdate.getDate() + "/"
@@ -93,8 +90,6 @@ const Log = () => {
 
     return (coffeeStamp)
   }
-
-
 
   const handleCostInput = (i: string) => {
     var x = parseInt(i, 10)
@@ -160,7 +155,7 @@ const Log = () => {
                   <Text textAlign="center">
                     Logged in as {username}
                   </Text>
-                  <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(user, auth, "", "", "", "")}/>
+                  <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(user, auth, "", "", "", "")} />
                 </HStack>
 
               )}
@@ -172,7 +167,6 @@ const Log = () => {
               <Button onPress={handleLog} >
                 <HStack space="sm" alignItems="center">
                   <ButtonText textAlignVertical='center'>Coffee had! <MaterialCommunityIcons name="coffee" size={20} color="white" /></ButtonText>
-                  {/* <Icon as={FiCoffee} /> */}
                 </HStack>
               </Button>
 
@@ -184,9 +178,6 @@ const Log = () => {
                   >
                     <SelectTrigger>
                       <SelectInput placeholder="Type" />
-                      {/* <SelectIcon mr="$3">
-                      <Icon as={ChevronDownIcon} />
-                    </SelectIcon> */}
                     </SelectTrigger>
                     <SelectPortal>
                       <SelectBackdrop />
@@ -218,9 +209,6 @@ const Log = () => {
                     >
                       <SelectTrigger>
                         <SelectInput placeholder="Currency" />
-                        {/* <SelectIcon mr="$3">
-                        <Icon as={ChevronDownIcon} />
-                      </SelectIcon> */}
                       </SelectTrigger>
                       <SelectPortal>
                         <SelectBackdrop />
@@ -256,8 +244,7 @@ const Log = () => {
 
               <Button onPress={() => setShowInputForm(!showInputForm)}>
                 <HStack space="sm" alignItems="center">
-                  <ButtonText>Detailed tracking</ButtonText>
-                  {/* <Icon as={showInputForm ? RiArrowUpWideFill : RiArrowDownWideFill} /> */}
+                  <ButtonText> {showInputForm == true ? "Hide details" : "Show Details"} </ButtonText>
                 </HStack>
               </Button>
 
@@ -266,8 +253,7 @@ const Log = () => {
 
               <Button onPress={() => { router.replace('/charts'); }}>
                 <HStack space="sm" alignItems="center">
-                  <ButtonText>  See stats!  </ButtonText>
-                  {/* <Icon as={FaChartBar} /> */}
+                  <ButtonText>  See stats! <FontAwesome name="bar-chart" size={24} color="white" /> </ButtonText>
                 </HStack>
               </Button>
             </VStack>
