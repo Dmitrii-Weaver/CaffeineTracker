@@ -262,7 +262,7 @@ const Log = () => {
               </Button>
 
 
-              <Heading size="lg">Cups of coffee had today: {coffeeData ? (dailyCoffeeCount == 0 ? coffeeCountDay() : dailyCoffeeCount) : 0} </Heading>
+              <Heading size="lg" textAlign='center'>Cups of coffee had today: {coffeeData ? (dailyCoffeeCount == 0 ? coffeeCountDay() : dailyCoffeeCount) : 0} </Heading>
 
               <Button onPress={() => { router.replace('/charts'); }}>
                 <HStack space="sm" alignItems="center">
