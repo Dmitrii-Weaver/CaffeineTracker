@@ -9,6 +9,7 @@ import useHandleAuth from '@/hooks/useHandleAuth'
 import { Redirect } from 'expo-router'
 import Register from '@/components/Register'
 import TextWithLink from '@/components/TextWithLink';
+import { Alert } from 'react-native';
 
 type FormData = {
     email: string;
@@ -19,6 +20,7 @@ export default function SignIn() {
     const toast = useToast()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const { control, handleSubmit, formState: { errors } } = useForm<FormData>()
     const [isLoading, setIsLoading] = useState(false)
 
@@ -40,22 +42,31 @@ export default function SignIn() {
 
 
     const onSubmit = async (data: FormData) => {
-        setIsLoading(true)
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        setIsLoading(false)
+        setIsLoading(true);
+        setError('');
 
-        handleAuth(user, auth, isLogin, email, password, "")
+        try {
+            const result = await handleAuth(user, auth, isLogin, email, password, "");
 
-        toast.show({
-            render: () => {
-                return (
-                    <Box backgroundColor="$green500" paddingHorizontal={4} paddingVertical={2} borderRadius={2} marginBottom={5}>
-                        <Text color="$white">Login Successful</Text>
-                    </Box>
-                )
-            },
-        })
+            if (result.error) {
+                setError(result.error);
+            } else {
+                toast.show({
+                    render: () => {
+                        return (
+                            <Box backgroundColor="$green500" paddingHorizontal={4} paddingVertical={2} borderRadius={2} marginBottom={5}>
+                                <Text color="$white">Login Successful</Text>
+                            </Box>
+                        )
+                    },
+                });
+            }
+        } catch (error) {
+            console.error('Unexpected error:', error);
+            setError('An unexpected error occurred. Please try again.');
+        }
+
+        setIsLoading(false);
     }
 
     if (showRegister) {
@@ -177,6 +188,12 @@ export default function SignIn() {
                             )}
                             name="password"
                         />
+
+                        {error ? (
+                            <Text color="$error600" textAlign="center" marginBottom={2}>
+                                {error}
+                            </Text>
+                        ) : null}
 
                         <Button
                             onPress={handleSubmit(onSubmit)}

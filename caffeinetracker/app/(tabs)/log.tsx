@@ -155,7 +155,7 @@ const Log = () => {
                   <Text textAlign="center">
                     Logged in as {username}
                   </Text>
-                  <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(user, auth, "", "", "", "")} />
+                  <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(user, auth, true, "", "", "")} />
                 </HStack>
 
               )}
