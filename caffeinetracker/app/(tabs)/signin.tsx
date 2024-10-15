@@ -9,6 +9,7 @@ import useHandleAuth from '@/hooks/useHandleAuth'
 import { Redirect } from 'expo-router'
 import Register from '@/components/Register'
 import TextWithLink from '@/components/TextWithLink';
+import { FirebaseError } from 'firebase/app';
 
 type FormData = {
     email: string;
@@ -25,6 +26,7 @@ export default function SignIn() {
     const [user, setUser] = useState<User | null>(null); // Track user authentication state
     const [isLogin, setIsLogin] = useState(true);
     const [showRegister, setShowRegister] = useState(false);
+    const [authError, setAuthError] = useState<string | null>(null);
 
     const auth = getAuth(app)
 
@@ -41,21 +43,29 @@ export default function SignIn() {
 
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        setIsLoading(false)
+        setAuthError(null)
 
-        handleAuth(user, auth, isLogin, email, password, "")
+        try {
+            const result = await handleAuth(user, auth, isLogin, email, password, "")
 
-        toast.show({
-            render: () => {
-                return (
-                    <Box backgroundColor="$green500" paddingHorizontal={4} paddingVertical={2} borderRadius={2} marginBottom={5}>
-                        <Text color="$white">Login Successful</Text>
-                    </Box>
-                )
-            },
-        })
+            if (result.success) {
+                toast.show({
+                    render: () => {
+                        return (
+                            <Box backgroundColor="$green500" paddingHorizontal={4} paddingVertical={2} borderRadius={2} marginBottom={5}>
+                                <Text color="$white">{result.message}</Text>
+                            </Box>
+                        )
+                    },
+                })
+            } else {
+                setAuthError(result.message)
+            }
+        } catch (error) {
+            setAuthError('An unexpected error occurred')
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     if (showRegister) {
@@ -177,6 +187,14 @@ export default function SignIn() {
                             )}
                             name="password"
                         />
+
+                        {authError && (
+                            <FormControl isInvalid={true}>
+                                <FormControlHelper>
+                                    <Text color="$error600">{authError}</Text>
+                                </FormControlHelper>
+                            </FormControl>
+                        )}
 
                         <Button
                             onPress={handleSubmit(onSubmit)}
