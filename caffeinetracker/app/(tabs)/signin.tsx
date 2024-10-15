@@ -63,7 +63,7 @@ export default function SignIn() {
                     },
                 })
             } else {
-                setAuthError(result.message)
+                setAuthError(result.message ?? null)
             }
         } catch (error) {
             setAuthError('An unexpected error occurred')
