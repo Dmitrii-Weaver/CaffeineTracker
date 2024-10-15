@@ -10,6 +10,8 @@ import { Redirect } from 'expo-router'
 import Register from '@/components/Register'
 import TextWithLink from '@/components/TextWithLink';
 import { FirebaseError } from 'firebase/app';
+import { Alert } from 'react-native';
+
 
 type FormData = {
     email: string;
@@ -20,6 +22,7 @@ export default function SignIn() {
     const toast = useToast()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const { control, handleSubmit, formState: { errors } } = useForm<FormData>()
     const [isLoading, setIsLoading] = useState(false)
 
@@ -49,6 +52,7 @@ export default function SignIn() {
             const result = await handleAuth(user, auth, isLogin, email, password, "")
 
             if (result.success) {
+
                 toast.show({
                     render: () => {
                         return (
