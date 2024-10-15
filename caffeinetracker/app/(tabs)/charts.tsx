@@ -11,10 +11,17 @@ import useHandleAuth from '@/hooks/useHandleAuth'
 
 const Charts = () => {
 
+  
+  const currentdate = new Date()
+
+
 
   const auth = getAuth(app)
 
   const [user, setUser] = useState<User | null>(null);
+  const { username, isLoading: usernameLoading, error: usernameError } = useGetUsernameByUid(user)
+  const { coffeeData, isLoading: coffeeDataLoading, error: coffeeDataError } = useGetCoffeeDataByUid(user)
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -53,6 +60,8 @@ const Charts = () => {
               <Heading size="xl" textAlign="center">
                 Your coffee stats :
               </Heading>
+              {coffeeData ? ""
+              : null}
               <Button onPress={() => { router.replace('/log'); }}>
                 <HStack space="sm" alignItems="center">
                   <ButtonText>  Back to log page  </ButtonText>
@@ -74,3 +83,4 @@ const Charts = () => {
 }
 
 export default Charts
+
