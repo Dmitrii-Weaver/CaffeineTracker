@@ -1,11 +1,12 @@
 import React from 'react'
 import { firestore } from "../firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
+import { Auth, User, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '@firebase/auth';
 import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { FirebaseError } from 'firebase/app';
 
+
 const useHandleAuth = () => {
-    const handleAuth = async (user: any, auth: any, isLogin: any, email: string, password: string, username: string) => {
+    const handleAuth = async (user: User | null, auth: Auth, isLogin: boolean, email: string, password: string, username: string) => {
         try {
             if (user) {
                 console.log('User logged out successfully!');
@@ -33,8 +34,10 @@ const useHandleAuth = () => {
                     return { success: true, message: 'User created successfully!' };
                 }
             }
+            return { success: true };
         } catch (error: any) {
-            console.error('Authentication error:', error.code, error.message);
+
+          console.error('Authentication error:', error.code, error.message);
             if (error instanceof FirebaseError) {
                 switch (error.code) {
                     case 'auth/user-not-found':
