@@ -8,8 +8,9 @@ import { Dimensions } from "react-native";
 
 
 
-const CustomLineChart = () => {
+const CustomLineChart = (coffeeData: any) => {
 
+    const currentdate = new Date()
     const screenWidth = Dimensions.get("window").width;
     const chartConfig = {
         backgroundGradientFrom: "#1E2923",
@@ -22,12 +23,28 @@ const CustomLineChart = () => {
         useShadowColorFromDataset: false // optional
     };
 
+    const daysInMonth = () => {
+        let year = currentdate.getFullYear()
+        let month = currentdate.getMonth() + 1
+        let days = new Date(year, month, 0).getDate();
+        let daysArray = []
+        let i = 1
+        while (i <= days) {
+            daysArray.push(i)
+            i+=1
+        }
+        return daysArray
+    }
+
+    const days = daysInMonth()
+    console.log(days)
+
     return (
         <VStack>
             <Text>Cumgobbler's Line Chart</Text>
             <LineChart
                 data={{
-                    labels: ["January", "February", "March", "April", "May", "June"],
+                    labels: days,
                     datasets: [
                         {
                             data: [
