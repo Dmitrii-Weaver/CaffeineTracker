@@ -1,17 +1,17 @@
-import { Box, Button, ButtonText, Heading, HStack, ScrollView, VStack } from '@gluestack-ui/themed'
+import { Box, Button, ButtonText, Heading, HStack, ScrollView, VStack,Text } from '@gluestack-ui/themed'
 import { Redirect, router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { Text } from 'react-native'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
 import useGetUsernameByUid from '@/hooks/useGetUsernameByUid'
 import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
 import useHandleAuth from '@/hooks/useHandleAuth'
+import CustomLineChart from '@/components/CustomLineChart'
 
 
 const Charts = () => {
 
-  
+
   const currentdate = new Date()
 
 
@@ -30,6 +30,8 @@ const Charts = () => {
 
     return () => unsubscribe();
   }, [auth]);
+
+  console.log(coffeeData)
 
   return (
 
@@ -60,11 +62,14 @@ const Charts = () => {
               <Heading size="xl" textAlign="center">
                 Your coffee stats :
               </Heading>
-              {coffeeData ? ""
-              : null}
+              {coffeeData ? <Text textAlign="center">last coffee logged on {coffeeData[coffeeData.length - 1].timestamp.fulldate}</Text>
+                : null}
+              <CustomLineChart />
               <Button onPress={() => { router.replace('/log'); }}>
                 <HStack space="sm" alignItems="center">
                   <ButtonText>  Back to log page  </ButtonText>
+
+
 
                 </HStack>
               </Button>
