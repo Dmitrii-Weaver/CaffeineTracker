@@ -1,4 +1,4 @@
-import { Box, Button, ButtonText, Heading, HStack, ScrollView, VStack,Text } from '@gluestack-ui/themed'
+import { Box, Button, ButtonText, Heading, HStack, ScrollView, VStack, Text } from '@gluestack-ui/themed'
 import { Redirect, router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
@@ -64,7 +64,10 @@ const Charts = () => {
               </Heading>
               {coffeeData ? <Text textAlign="center">last coffee logged on {coffeeData[coffeeData.length - 1].timestamp.fulldate}</Text>
                 : null}
-              <CustomLineChart />
+
+              {coffeeData ?
+                <CustomLineChart coffeeData={coffeeData}/>
+                : null}
               <Button onPress={() => { router.replace('/log'); }}>
                 <HStack space="sm" alignItems="center">
                   <ButtonText>  Back to log page  </ButtonText>
