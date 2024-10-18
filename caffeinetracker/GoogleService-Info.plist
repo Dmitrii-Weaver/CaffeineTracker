@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>860678435952-jvriqoj5qasjjdnv4fo9v3duootpukts.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.860678435952-jvriqoj5qasjjdnv4fo9v3duootpukts</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>860678435952-08jc1fqvqbscdimlidvoprtmnha0bg8m.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyChD9kLH4ZurkJmmiLKOpwnfQIsOAal4uI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>860678435952</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.caffeinetracker.app</string>
+	<key>PROJECT_ID</key>
+	<string>coffeetracker-4d2b1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>coffeetracker-4d2b1.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:860678435952:ios:7f9220d9bae748a34570b5</string>
+</dict>
+</plist>

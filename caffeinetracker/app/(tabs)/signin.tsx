@@ -11,6 +11,7 @@ import Register from '@/components/Register'
 import TextWithLink from '@/components/TextWithLink';
 import { FirebaseError } from 'firebase/app';
 import { Alert } from 'react-native';
+import GoogleAuth from '@/components/GoogleAuth';
 
 
 type FormData = {
@@ -208,6 +209,7 @@ export default function SignIn() {
                                 {isLoading ? "Loading..." : "Sign In"}
                             </Text>
                         </Button>
+                        <GoogleAuth />
                     </VStack>
 
                     <TextWithLink
