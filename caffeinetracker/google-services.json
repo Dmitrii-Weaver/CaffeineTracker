@@ -7,18 +7,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:860678435952:android:1bdccd48dc78bb144570b5",
+        "mobilesdk_app_id": "1:860678435952:android:9a317dce7a2c26384570b5",
         "android_client_info": {
           "package_name": "com.caffeinetracker.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "860678435952-08jc1fqvqbscdimlidvoprtmnha0bg8m.apps.googleusercontent.com",
+          "client_id": "860678435952-491flsbaj73dpjhl91ihgod4u2jrv7g9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.caffeinetracker.app",
-            "certificate_hash": "a91219f508344b22c0b41c517208f4218f3c917a"
+            "certificate_hash": "82dde22ef2c305d3df1e088932c151f2fb4e8e2f"
+          }
+        },
+        {
+          "client_id": "860678435952-o30uphiboouigmkcf7pf33o3fdj2e5ch.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.caffeinetracker.app",
+            "certificate_hash": "9cec82e46f23c914560c5db2d2b116b65340b8ef"
           }
         },
         {
@@ -37,6 +45,13 @@
             {
               "client_id": "860678435952-9a7ga3tcfqbnopbs09ifpjn64ae4qil7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "860678435952-jvriqoj5qasjjdnv4fo9v3duootpukts.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.caffeinetracker.app"
+              }
             }
           ]
         }

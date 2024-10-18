@@ -31,14 +31,15 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
       "eas": {
-        "projectId": "88d51e97-1fa5-47d7-a9e7-a30809f5af3f"
+        "projectId": "0a9b1009-9e63-4c65-86b4-902e4047ff57"
       }
     }
   }
