@@ -4,13 +4,17 @@ import { Controller, useForm } from 'react-hook-form'
 import { ScrollView } from 'react-native'
 
 import { app } from "../../firebaseConfig"
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from '@firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, User, } from '@firebase/auth';
 import useHandleAuth from '@/hooks/useHandleAuth'
 import { Redirect } from 'expo-router'
 import Register from '@/components/Register'
 import TextWithLink from '@/components/TextWithLink';
 import { FirebaseError } from 'firebase/app';
 import { Alert } from 'react-native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+
+
 
 
 type FormData = {
@@ -19,6 +23,23 @@ type FormData = {
 };
 
 export default function SignIn() {
+    GoogleSignin.configure({
+        webClientId: "860678435952-9a7ga3tcfqbnopbs09ifpjn64ae4qil7.apps.googleusercontent.com",
+    });
+
+    async function onGoogleButtonPress() {
+        // Check if your device supports Google Play
+        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        // Get the users ID token
+        const { idToken } = await GoogleSignin.signIn();
+
+        // Create a Google credential with the token
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+        // Sign-in the user with the credential
+        return auth().signInWithCredential(googleCredential);
+    }
+
     const toast = useToast()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
