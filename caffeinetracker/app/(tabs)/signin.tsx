@@ -4,14 +4,14 @@ import { Controller, useForm } from 'react-hook-form'
 import { ScrollView } from 'react-native'
 
 import { app } from "../../firebaseConfig"
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, User, } from '@firebase/auth';
-import useHandleAuth from '@/hooks/useHandleAuth'
-import { Redirect } from 'expo-router'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, User, GoogleAuthProvider, signInWithCredential } from '@firebase/auth';
+import useHandleAuth, { ActionType } from '@/hooks/useHandleAuth'
+import { Redirect, router } from 'expo-router'
 import Register from '@/components/Register'
 import TextWithLink from '@/components/TextWithLink';
 import { FirebaseError } from 'firebase/app';
 import { Alert } from 'react-native';
-import {   GoogleSignin, statusCodes   } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 
 
@@ -21,11 +21,7 @@ type FormData = {
     password: string;
 };
 
-GoogleSignin.configure({
-    webClientId: "860678435952-9a7ga3tcfqbnopbs09ifpjn64ae4qil7.apps.googleusercontent.com",
-});
-
-export default function SignIn() {
+export default function SignIn({ setIsSignInLoading }: { setIsSignInLoading: (loading: boolean) => void }) {
     const toast = useToast()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -37,6 +33,7 @@ export default function SignIn() {
     const [isLogin, setIsLogin] = useState(true);
     const [showRegister, setShowRegister] = useState(false);
     const [authError, setAuthError] = useState<string | null>(null);
+    const [redirectToLog, setRedirectToLog] = useState(false);
 
     const auth = getAuth(app)
 
@@ -44,22 +41,34 @@ export default function SignIn() {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
+            if (user) {
+                setRedirectToLog(true);
+            } else {
+                setRedirectToLog(false);
+            }
+            setIsSignInLoading(false);
         });
 
         return () => unsubscribe();
-    }, [auth]);
+    }, [auth, setIsSignInLoading]);
 
     const onGoogleButtonPress = async () => {
         try {
+            setIsSignInLoading(true);
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            console.log("userinfo", userInfo);
-
-            if (userInfo) {
-                
+            if (!userInfo.data?.idToken) {
+                console.log('No ID token found');
+                setIsSignInLoading(false);
+                return;
             }
+            const googleCredential = GoogleAuthProvider.credential(userInfo.data?.idToken);
+            const response = await signInWithCredential(auth, googleCredential);
 
+            if (response.user) {
+                const result = await handleAuth(userInfo.data.user, auth, ActionType.LOGIN_GOOGLE, email, password);
+                handleAuthResponse(result);
+            }
         } catch (error: any) {
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 console.log(error)
@@ -69,8 +78,9 @@ export default function SignIn() {
                 console.log(error)
             } else {
             }
+        } finally {
+            setIsSignInLoading(false);
         }
- 
     }
 
     const onSubmit = async (data: FormData) => {
@@ -78,27 +88,34 @@ export default function SignIn() {
         setAuthError(null)
 
         try {
-            const result = await handleAuth(user, auth, isLogin, email, password, "")
-
-            if (result.success) {
-
-                toast.show({
-                    render: () => {
-                        return (
-                            <Box backgroundColor="$green500" paddingHorizontal={4} paddingVertical={2} borderRadius={2} marginBottom={5}>
-                                <Text color="$white">{result.message}</Text>
-                            </Box>
-                        )
-                    },
-                })
-            } else {
-                setAuthError(result.message ?? null)
-            }
+            const result = await handleAuth(null, auth, ActionType.LOGIN_EMAIL_PASS, email, password)
+            handleAuthResponse(result)
         } catch (error) {
             setAuthError('An unexpected error occurred')
         } finally {
             setIsLoading(false)
         }
+    }
+
+    const handleAuthResponse = (result: { success: boolean; message: string }) => {
+        if (result.success) {
+            toast.show({
+                render: () => {
+                    return (
+                        <Box backgroundColor="$green500" paddingHorizontal={4} paddingVertical={2} borderRadius={2} marginBottom={5}>
+                            <Text color="$white">{result.message}</Text>
+                        </Box>
+                    )
+                },
+            })
+        } else {
+            setAuthError(result.message ?? null)
+        }
+    }
+
+    if (redirectToLog) {
+        router.replace('/log');
+        return null;
     }
 
     if (showRegister) {
@@ -142,7 +159,7 @@ export default function SignIn() {
                         <Box>
                             <Text>Logged in as {user.email}</Text>
                             <Redirect href="/log" />
-                            <Button onPress={() => handleAuth(user, auth, isLogin, email, password, "")}>
+                            <Button onPress={() => handleAuth(user, auth, ActionType.LOGOUT, email, password)}>
                                 <ButtonText>Logout</ButtonText>
                             </Button>
                         </Box>
@@ -238,9 +255,8 @@ export default function SignIn() {
                             </Text>
                         </Button>
                         <Button
-                            title="Sign in with Google"
                             onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
-                        />
+                        ></Button>
                     </VStack>
 
                     <TextWithLink

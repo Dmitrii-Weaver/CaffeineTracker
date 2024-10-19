@@ -4,8 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
-import useGetUsernameByUid from '@/hooks/useGetUsernameByUid'
-import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
+import {useGetCoffeeDataByUid, useGetUsernameByUid} from '@/hooks/firebase'
 import useHandleAuth from '@/hooks/useHandleAuth'
 
 

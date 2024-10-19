@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 
 import { app } from "../firebaseConfig"
 import { getAuth, onAuthStateChanged, User } from '@firebase/auth';
-import useHandleAuth from '@/hooks/useHandleAuth';
+import useHandleAuth, {ActionType} from '@/hooks/useHandleAuth';
 
 type FormData = {
     email: string;
@@ -45,7 +45,7 @@ export default function Register({ onBackToSignIn }: RegisterProps) {
         await new Promise(resolve => setTimeout(resolve, 1000))
         setIsLoading(false)
 
-        handleAuth(user, auth, isLogin, email, password, username)
+        handleAuth(user, auth, ActionType.REGISTER, email, password, username)
 
         toast.show({
             render: () => {

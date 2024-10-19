@@ -5,9 +5,8 @@ import useLogCoffee from '@/hooks/useLogCoffee'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
 import { Redirect, router } from 'expo-router'
-import useHandleAuth from '@/hooks/useHandleAuth'
-import useGetUsernameByUid from '@/hooks/useGetUsernameByUid'
-import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
+import useHandleAuth, { ActionType } from '@/hooks/useHandleAuth'
+import { useGetCoffeeDataByUid, useGetUsernameByUid } from '@/hooks/firebase'
 
 //icons import
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -155,7 +154,7 @@ const Log = () => {
                   <Text textAlign="center">
                     Logged in as {username}
                   </Text>
-                  <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(user, auth, true, "", "", "")} />
+                  <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(user, auth, ActionType.LOGOUT, "", "")} />
                 </HStack>
 
               )}
