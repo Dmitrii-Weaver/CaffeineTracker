@@ -11,8 +11,7 @@ import Register from '@/components/Register'
 import TextWithLink from '@/components/TextWithLink';
 import { FirebaseError } from 'firebase/app';
 import { Alert } from 'react-native';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
+import {   GoogleSignin, statusCodes   } from '@react-native-google-signin/google-signin';
 
 
 
@@ -22,24 +21,11 @@ type FormData = {
     password: string;
 };
 
+GoogleSignin.configure({
+    webClientId: "860678435952-9a7ga3tcfqbnopbs09ifpjn64ae4qil7.apps.googleusercontent.com",
+});
+
 export default function SignIn() {
-    GoogleSignin.configure({
-        webClientId: "860678435952-9a7ga3tcfqbnopbs09ifpjn64ae4qil7.apps.googleusercontent.com",
-    });
-
-    async function onGoogleButtonPress() {
-        // Check if your device supports Google Play
-        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-        // Get the users ID token
-        const { idToken } = await GoogleSignin.signIn();
-
-        // Create a Google credential with the token
-        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-        // Sign-in the user with the credential
-        return auth().signInWithCredential(googleCredential);
-    }
-
     const toast = useToast()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -64,6 +50,28 @@ export default function SignIn() {
         return () => unsubscribe();
     }, [auth]);
 
+    const onGoogleButtonPress = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log("userinfo", userInfo);
+
+            if (userInfo) {
+                
+            }
+
+        } catch (error: any) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                console.log(error)
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                console.log(error)
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                console.log(error)
+            } else {
+            }
+        }
+ 
+    }
 
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
@@ -229,6 +237,10 @@ export default function SignIn() {
                                 {isLoading ? "Loading..." : "Sign In"}
                             </Text>
                         </Button>
+                        <Button
+                            title="Sign in with Google"
+                            onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+                        />
                     </VStack>
 
                     <TextWithLink
