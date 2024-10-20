@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Heading, Input, InputField, VStack, Text, Icon, HStack, Select, SelectTrigger, SelectInput, SelectPortal, SelectBackdrop, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, SelectItem, Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel, ButtonText } from '@gluestack-ui/themed'
-import { ScrollView } from 'react-native'
+import { Box, Button, Heading, Input, InputField, VStack, Text, Icon, HStack, Select, SelectTrigger, SelectInput, SelectPortal, SelectBackdrop, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, SelectItem, Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel, ButtonText, ImageBackground, Image } from '@gluestack-ui/themed'
+import { Dimensions, ScrollView } from 'react-native'
 import useLogCoffee from '@/hooks/useLogCoffee'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
@@ -23,6 +23,8 @@ const Log = () => {
   const [coffeeCostCurrency, setCoffeeCostCurrency] = useState("EUR")
   const [coffeeDecaf, setCoffeeDecaf] = useState(false)
   const currentdate = new Date()
+
+  const image = { uri: 'https://media.discordapp.net/attachments/448871827838730270/1296632519319486484/coffeebg.png?ex=6712fea2&is=6711ad22&hm=921e8f68325937ac9f690de29ff241fd49f40d87f041d8c16a20c83747ca7a61&=&format=webp&quality=lossless&width=839&height=559' };
 
   const auth = getAuth(app)
   const handleAuth = useHandleAuth()
@@ -118,23 +120,26 @@ const Log = () => {
 
 
   return (
-
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <Image source={require("@/assets/images/coffeebg.png")} alt="bg" position='absolute' width={Dimensions.get("window").width }  height={Dimensions.get("window").height} />
       <Box
         flex={1}
         justifyContent="center"
         alignItems="center"
-        bg="$backgroundLight0"
         py="$4"
         px="$4"
+        width={Dimensions.get("window").width + 1}
       >
+
+        
+        
         <Box
           w="$full"
           maxWidth="$96"
           p="$6"
-          borderWidth="$1"
+          borderWidth="$2"
           borderRadius="$lg"
-          bg="$white"
+          bg="#B0968E"
           shadowColor="$shadowColor"
           shadowOffset={{ width: 0, height: 2 }}
           shadowOpacity={0.25}
@@ -152,7 +157,7 @@ const Log = () => {
                 <Text textAlign="center">Error loading username</Text>
               ) : (
                 <HStack space="sm" alignItems="center" justifyContent='center'>
-                  <Text textAlign="center">
+                  <Text textAlign="center" color='black'>
                     Logged in as {username}
                   </Text>
                   <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(user, auth, true, "", "", "")} />
@@ -160,11 +165,11 @@ const Log = () => {
 
               )}
 
-              <Text textAlign="center">
+              <Text textAlign="center" color='black'>
                 Monitor your coffee drinking habit with one click!
               </Text>
 
-              <Button onPress={handleLog} >
+              <Button backgroundColor='#6A5650' onPress={handleLog} $hover-bgColor='#59453F'>
                 <HStack space="sm" alignItems="center">
                   <ButtonText textAlignVertical='center'>Coffee had! <MaterialCommunityIcons name="coffee" size={20} color="white" /></ButtonText>
                 </HStack>
@@ -176,7 +181,7 @@ const Log = () => {
                     onValueChange={(value: string) => setCoffeeType(value)}
                     selectedValue={coffeeType}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger borderColor='black'>
                       <SelectInput placeholder="Type" />
                     </SelectTrigger>
                     <SelectPortal>
@@ -196,9 +201,10 @@ const Log = () => {
                   </Select>
 
                   <HStack space="md">
-                    <Input flex={1}>
+                    <Input flex={1} borderColor='black'>
                       <InputField
                         placeholder="Cost"
+                        placeholderTextColor={"black"}
                         keyboardType="numeric"
                         onChangeText={handleCostInput}
                       />
@@ -207,7 +213,7 @@ const Log = () => {
                       onValueChange={(value: string) => setCoffeeCostCurrency(value)}
                       selectedValue={coffeeCostCurrency}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger borderColor='black'>
                         <SelectInput placeholder="Currency" />
                       </SelectTrigger>
                       <SelectPortal>
@@ -225,16 +231,15 @@ const Log = () => {
                   </HStack>
 
                   <HStack space="md" alignItems="center">
-                    <Text>Decaf?</Text>
                     <Checkbox
                       value="decaf"
                       isChecked={coffeeDecaf}
                       onChange={handleDecafChange}
                     >
-                      <CheckboxIndicator mr="$2">
-                        <CheckboxIcon as={CheckIcon} />
+                      <CheckboxIndicator mr="$2" borderColor='black' >
+                        <CheckboxIcon as={CheckIcon} bgColor='#494949' color='white' />
                       </CheckboxIndicator>
-                      <CheckboxLabel>Decaf</CheckboxLabel>
+                      <CheckboxLabel >Decaf</CheckboxLabel>
                     </Checkbox>
                   </HStack>
                 </VStack>
@@ -242,7 +247,7 @@ const Log = () => {
 
 
 
-              <Button onPress={() => setShowInputForm(!showInputForm)}>
+              <Button backgroundColor='#6A5650' onPress={() => setShowInputForm(!showInputForm)} $hover-bgColor='#59453F'>
                 <HStack space="sm" alignItems="center">
                   <ButtonText> {showInputForm == true ? "Hide details" : "Show Details"} </ButtonText>
                 </HStack>
@@ -251,7 +256,7 @@ const Log = () => {
 
               <Heading size="lg" textAlign='center'>Cups of coffee had today: {coffeeData ? (dailyCoffeeCount == 0 ? coffeeCountDay() : dailyCoffeeCount) : 0} </Heading>
 
-              <Button onPress={() => { router.replace('/charts'); }}>
+              <Button  backgroundColor='#6A5650' onPress={() => { router.replace('/charts'); }} $hover-bgColor='#59453F'>
                 <HStack space="sm" alignItems="center">
                   <ButtonText>  See stats! <FontAwesome name="bar-chart" size={24} color="white" /> </ButtonText>
                 </HStack>
@@ -261,7 +266,7 @@ const Log = () => {
           ) : <VStack space="md">
             <Text>Please sign in to start tracking</Text>
             <Box>
-              <Button >
+              <Button $hover-bgColor='#59453F'>
                 <ButtonText><Redirect href="/signin" /></ButtonText>
               </Button>
             </Box>
