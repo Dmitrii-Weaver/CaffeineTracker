@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Button, Heading, Input, InputField, VStack, Text, Icon, HStack, Select, SelectTrigger, SelectInput, SelectPortal, SelectBackdrop, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, SelectItem, Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel, ButtonText, ImageBackground, Image } from '@gluestack-ui/themed'
-import { ScrollView } from 'react-native'
+import { Dimensions, ScrollView } from 'react-native'
 import useLogCoffee from '@/hooks/useLogCoffee'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { app } from "../../firebaseConfig"
@@ -121,16 +121,17 @@ const Log = () => {
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <Image source={require("@/assets/images/coffeebg.png")} alt="bg" position='absolute' width={Dimensions.get("window").width }  height={Dimensions.get("window").height} />
       <Box
         flex={1}
         justifyContent="center"
         alignItems="center"
-        bg="white"
         py="$4"
         px="$4"
+        width={Dimensions.get("window").width + 1}
       >
 
-        <Image source={require("@/assets/images/coffeebg.png")} alt="bg" position='absolute' size='full' />
+        
         
         <Box
           w="$full"
@@ -168,7 +169,7 @@ const Log = () => {
                 Monitor your coffee drinking habit with one click!
               </Text>
 
-              <Button backgroundColor='#6A5650' onPress={handleLog} >
+              <Button backgroundColor='#6A5650' onPress={handleLog} $hover-bgColor='#59453F'>
                 <HStack space="sm" alignItems="center">
                   <ButtonText textAlignVertical='center'>Coffee had! <MaterialCommunityIcons name="coffee" size={20} color="white" /></ButtonText>
                 </HStack>
@@ -246,7 +247,7 @@ const Log = () => {
 
 
 
-              <Button backgroundColor='#6A5650' onPress={() => setShowInputForm(!showInputForm)}>
+              <Button backgroundColor='#6A5650' onPress={() => setShowInputForm(!showInputForm)} $hover-bgColor='#59453F'>
                 <HStack space="sm" alignItems="center">
                   <ButtonText> {showInputForm == true ? "Hide details" : "Show Details"} </ButtonText>
                 </HStack>
@@ -255,7 +256,7 @@ const Log = () => {
 
               <Heading size="lg" textAlign='center'>Cups of coffee had today: {coffeeData ? (dailyCoffeeCount == 0 ? coffeeCountDay() : dailyCoffeeCount) : 0} </Heading>
 
-              <Button  backgroundColor='#6A5650' onPress={() => { router.replace('/charts'); }}>
+              <Button  backgroundColor='#6A5650' onPress={() => { router.replace('/charts'); }} $hover-bgColor='#59453F'>
                 <HStack space="sm" alignItems="center">
                   <ButtonText>  See stats! <FontAwesome name="bar-chart" size={24} color="white" /> </ButtonText>
                 </HStack>
@@ -265,7 +266,7 @@ const Log = () => {
           ) : <VStack space="md">
             <Text>Please sign in to start tracking</Text>
             <Box>
-              <Button >
+              <Button $hover-bgColor='#59453F'>
                 <ButtonText><Redirect href="/signin" /></ButtonText>
               </Button>
             </Box>
