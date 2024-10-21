@@ -52,6 +52,12 @@ export default function SignIn({ setIsSignInLoading }: { setIsSignInLoading: (lo
         return () => unsubscribe();
     }, [auth, setIsSignInLoading]);
 
+    useEffect(() => {
+        if (redirectToLog) {
+            router.replace('/log');
+        }
+    }, [redirectToLog]);
+
     const onGoogleButtonPress = async () => {
         try {
             setIsSignInLoading(true);
@@ -111,11 +117,6 @@ export default function SignIn({ setIsSignInLoading }: { setIsSignInLoading: (lo
         } else {
             setAuthError(result.message ?? null)
         }
-    }
-
-    if (redirectToLog) {
-        router.replace('/log');
-        return null;
     }
 
     if (showRegister) {
