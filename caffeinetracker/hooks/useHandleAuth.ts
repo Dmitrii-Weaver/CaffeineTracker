@@ -1,10 +1,10 @@
 import React from 'react'
-import { firestore } from "../firebaseConfig";
-import { Auth, User, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword} from '@firebase/auth';
-import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { app, firestore } from "../firebaseConfig";
+import { Auth, User, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, getAuth, updateProfile } from '@firebase/auth';
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { FirebaseError } from 'firebase/app';
-
- export  enum ActionType {
+import { useUser, UserData } from '@/store';
+export enum ActionType {
     LOGOUT = 'LOGOUT',
     LOGIN_EMAIL_PASS = 'LOGIN_EMAIL_PASS',
     REGISTER = 'REGISTER',
@@ -21,45 +21,64 @@ interface GoogleUser {
 }
 
 const useHandleAuth = () => {
+    const auth = getAuth(app)
+    const {  setUser } = useUser();
+
+
 
     function isGoogleUser(user: User | GoogleUser): user is GoogleUser {
         return (user as GoogleUser).id !== undefined;
     }
 
-    const handleAuth = async (user: User | GoogleUser | null, auth: Auth, type: ActionType, email: string, password: string, username?: string) => {
+    const handleAuth = async (user: User | GoogleUser | null, type: ActionType, email: string, password: string, username?: string) => {
         try {
             if (type === ActionType.LOGOUT) {
                 await signOut(auth);
+                setUser(null);
                 console.log('User logged out successfully!');
                 return { success: true, message: 'User logged out successfully!' };
-            } else {
+            }  else {
                 if (type === ActionType.LOGIN_EMAIL_PASS) {
-                    const response = await signInWithEmailAndPassword(auth, email, password);
-                    if(!response.user) return { success: false, message: 'User log in failed!' };
-                    user = response.user
-                    console.log('User signed in successfully!');
-                } else if (type === ActionType.REGISTER) {
+                    const signedUser = await signInWithEmailAndPassword(auth, email, password);
+                    if (!signedUser.user.displayName) {
+                        const userRef = doc(firestore, "users", signedUser.user.uid);
+                        const userSnapshot = await getDoc(userRef);
+                        if (userSnapshot.exists()) {
+                          const userData = userSnapshot.data();
+                          await updateProfile(signedUser.user, {
+                            displayName: userData.displayName || signedUser.user.email?.split('@')[0], 
+                        });
+                        } else {
+                          console.log('User document not found!');
+                        }
+                      }
+                     user = signedUser.user;
+                     console.log('User signed in successfully!');
+                 } else if (type === ActionType.REGISTER) {
                     const newUser = await createUserWithEmailAndPassword(auth, email, password);
-                    if(!newUser.user) return { success: false, message: 'Failed to register user!' };
+                    await updateProfile(newUser.user, {
+                        displayName: username, 
+                    });
                     user = newUser.user;
                     console.log('User registered successfully!');
                 }
-                if(!user) return { success: false, message: 'user not found!' };
+                if (!user) return { success: false, message: 'user not found!' };
                 const userDoc = {
-                    uid:  isGoogleUser(user) ?  user.id : user.uid,
+                    uid: isGoogleUser(user) ? user.id : user.uid,
                     email: user.email,
-                    username: isGoogleUser(user) ? user.name : username,
+                    username: isGoogleUser(user) ? user.name : user.displayName,
                     coffees: [],
-                    ...(isGoogleUser(user) ? {photo: user.photo, provider: 'Google'} : {provider: 'Email/Password'}),
+                    photo: isGoogleUser(user) ? user.photo : null,
+                    provider: isGoogleUser(user) ? 'Google' : 'Email/Password',
                 }
                 await setDoc(doc(firestore, "users", userDoc.uid), userDoc)
-                    //localStorage.setItem("user-info", JSON.stringify(userDoc))
                 console.log('User created successfully!');
+                setUser(userDoc);
                 return { success: true, message: 'User created successfully!' };
             }
         } catch (error: any) {
 
-          console.error('Authentication error:', error.code, error.message);
+            console.error('Authentication error:', error.code, error.message);
             if (error instanceof FirebaseError) {
                 switch (error.code) {
                     case 'auth/user-not-found':

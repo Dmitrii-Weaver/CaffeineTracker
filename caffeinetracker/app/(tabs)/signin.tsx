@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { ScrollView } from 'react-native'
 
 import { app } from "../../firebaseConfig"
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, User, GoogleAuthProvider, signInWithCredential } from '@firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, GoogleAuthProvider, signInWithCredential } from '@firebase/auth';
 import useHandleAuth, { ActionType } from '@/hooks/useHandleAuth'
 import { Redirect, router } from 'expo-router'
 import Register from '@/components/Register'
@@ -12,6 +12,7 @@ import TextWithLink from '@/components/TextWithLink';
 import { FirebaseError } from 'firebase/app';
 import { Alert } from 'react-native';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { UserData, useUser } from '../../store';
 
 
 
@@ -21,72 +22,45 @@ type FormData = {
     password: string;
 };
 
-export default function SignIn({ setIsSignInLoading }: { setIsSignInLoading: (loading: boolean) => void }) {
+export default function SignIn() {
     const toast = useToast()
+    const { user } = useUser();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const { control, handleSubmit, formState: { errors } } = useForm<FormData>()
     const [isLoading, setIsLoading] = useState(false)
 
-    const [user, setUser] = useState<User | null>(null); // Track user authentication state
-    const [isLogin, setIsLogin] = useState(true);
     const [showRegister, setShowRegister] = useState(false);
     const [authError, setAuthError] = useState<string | null>(null);
     const [redirectToLog, setRedirectToLog] = useState(false);
-
     const auth = getAuth(app)
-
     const handleAuth = useHandleAuth()
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setRedirectToLog(true);
-            } else {
-                setRedirectToLog(false);
-            }
-            setIsSignInLoading(false);
-        });
-
-        return () => unsubscribe();
-    }, [auth, setIsSignInLoading]);
 
     useEffect(() => {
-        if (redirectToLog) {
-            router.replace('/log');
-        }
-    }, [redirectToLog]);
+      
+    }, [user]);
+
 
     const onGoogleButtonPress = async () => {
         try {
-            setIsSignInLoading(true);
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
             if (!userInfo.data?.idToken) {
                 console.log('No ID token found');
-                setIsSignInLoading(false);
                 return;
             }
             const googleCredential = GoogleAuthProvider.credential(userInfo.data?.idToken);
             const response = await signInWithCredential(auth, googleCredential);
 
             if (response.user) {
-                const result = await handleAuth(userInfo.data.user, auth, ActionType.LOGIN_GOOGLE, email, password);
+                const result = await handleAuth(userInfo.data.user, ActionType.LOGIN_GOOGLE, email, password);
                 handleAuthResponse(result);
             }
         } catch (error: any) {
-            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 console.log(error)
-            } else if (error.code === statusCodes.IN_PROGRESS) {
-                console.log(error)
-            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                console.log(error)
-            } else {
-            }
-        } finally {
-            setIsSignInLoading(false);
-        }
+        } 
     }
 
     const onSubmit = async (data: FormData) => {
@@ -94,7 +68,7 @@ export default function SignIn({ setIsSignInLoading }: { setIsSignInLoading: (lo
         setAuthError(null)
 
         try {
-            const result = await handleAuth(null, auth, ActionType.LOGIN_EMAIL_PASS, email, password)
+            const result = await handleAuth(null, ActionType.LOGIN_EMAIL_PASS, email, password)
             handleAuthResponse(result)
         } catch (error) {
             setAuthError('An unexpected error occurred')
@@ -103,7 +77,7 @@ export default function SignIn({ setIsSignInLoading }: { setIsSignInLoading: (lo
         }
     }
 
-    const handleAuthResponse = (result: { success: boolean; message: string }) => {
+    const handleAuthResponse = (result: { success: boolean; message: string}) => {
         if (result.success) {
             toast.show({
                 render: () => {
@@ -118,6 +92,7 @@ export default function SignIn({ setIsSignInLoading }: { setIsSignInLoading: (lo
             setAuthError(result.message ?? null)
         }
     }
+
 
     if (showRegister) {
         return <>
@@ -158,9 +133,9 @@ export default function SignIn({ setIsSignInLoading }: { setIsSignInLoading: (lo
                     </Heading>
                     {user ? (
                         <Box>
-                            <Text>Logged in as {user.email}</Text>
+                            <Text>Logged in as {user.username}</Text>
                             <Redirect href="/log" />
-                            <Button onPress={() => handleAuth(user, auth, ActionType.LOGOUT, email, password)}>
+                            <Button onPress={() => handleAuth(null, ActionType.LOGOUT, email, password)}>
                                 <ButtonText>Logout</ButtonText>
                             </Button>
                         </Box>

@@ -1,9 +1,9 @@
 import { firestore } from '@/firebaseConfig';
-import { User } from 'firebase/auth';
+import { UserData } from '@/store';
 import { doc, getDoc } from 'firebase/firestore';
 import { useState, useEffect, useCallback } from 'react';
 
-export const useGetCoffeeDataByUid = (user: User | null) => {
+export const useGetCoffeeDataByUid = (user: UserData | null) => {
     const [coffeeData, setCoffeeData] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -32,7 +32,7 @@ export const useGetCoffeeDataByUid = (user: User | null) => {
     return { coffeeData, isLoading, error, refetch: getCoffeeData };
 };
 
-export const useGetUsernameByUid = (user: User | null) => {
+export const useGetUsernameByUid = (user: UserData | null) => {
     const [username, setUsername] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);

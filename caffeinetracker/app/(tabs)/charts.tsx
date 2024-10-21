@@ -3,32 +3,18 @@ import { Redirect, router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
-import { app } from "../../firebaseConfig"
-import {useGetCoffeeDataByUid, useGetUsernameByUid} from '@/hooks/firebase'
-import useHandleAuth from '@/hooks/useHandleAuth'
+import {useGetCoffeeDataByUid} from '@/hooks/firebase'
+import { useUser } from '@/store'
 
 
 const Charts = () => {
-
-  
   const currentdate = new Date()
-
-
-
-  const auth = getAuth(app)
-
-  const [user, setUser] = useState<User | null>(null);
-  const { username, isLoading: usernameLoading, error: usernameError } = useGetUsernameByUid(user)
+  const {  user } = useUser();
   const { coffeeData, isLoading: coffeeDataLoading, error: coffeeDataError } = useGetCoffeeDataByUid(user)
 
-
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
 
-    return () => unsubscribe();
-  }, [auth]);
+  }, [user]);
 
   return (
 
@@ -73,8 +59,6 @@ const Charts = () => {
             <Text>Please sign in to start tracking</Text>
             <Redirect href="/signin" />
           </VStack>}
-
-
         </Box>
       </Box>
     </ScrollView>

@@ -45,7 +45,7 @@ export default function Register({ onBackToSignIn }: RegisterProps) {
         await new Promise(resolve => setTimeout(resolve, 1000))
         setIsLoading(false)
 
-        handleAuth(user, auth, ActionType.REGISTER, email, password, username)
+        handleAuth(user, ActionType.REGISTER, email, password, username)
 
         toast.show({
             render: () => {

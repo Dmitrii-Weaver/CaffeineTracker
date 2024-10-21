@@ -7,6 +7,7 @@ import { app } from "../../firebaseConfig"
 import { Redirect, router } from 'expo-router'
 import useHandleAuth, { ActionType } from '@/hooks/useHandleAuth'
 import { useGetCoffeeDataByUid, useGetUsernameByUid } from '@/hooks/firebase'
+import { useUser } from '@/store';
 
 //icons import
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -23,23 +24,19 @@ const Log = () => {
   const [coffeeDecaf, setCoffeeDecaf] = useState(false)
   const currentdate = new Date()
 
-  const auth = getAuth(app)
   const handleAuth = useHandleAuth()
 
-  const [user, setUser] = useState<User | null>(null);
-  const { username, isLoading: usernameLoading, error: usernameError } = useGetUsernameByUid(user)
+  const { user } = useUser();
   const { coffeeData, isLoading: coffeeDataLoading, error: coffeeDataError } = useGetCoffeeDataByUid(user)
 
   const [dailyCoffeeCount, setDailyCoffeeCount] = useState(0)
 
 
+  
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
+      
+  }, [user]);
 
-    return () => unsubscribe();
-  }, [auth]);
 
   const coffeeCountDay = () => {
     var today = currentdate.getDate() + "/"
@@ -145,16 +142,12 @@ const Log = () => {
               <Heading size="xl" textAlign="center">
                 Caffeine Tracker
               </Heading>
-              {usernameLoading ? (
-                <Text textAlign="center">Loading username...</Text>
-              ) : usernameError ? (
-                <Text textAlign="center">Error loading username</Text>
-              ) : (
+              {user && (
                 <HStack space="sm" alignItems="center" justifyContent='center'>
                   <Text textAlign="center">
-                    Logged in as {username}
+                    Logged in as {user.username}
                   </Text>
-                  <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(user, auth, ActionType.LOGOUT, "", "")} />
+                  <AntDesign name="logout" size={24} color="black" onPress={() => handleAuth(null, ActionType.LOGOUT, "", "")} />
                 </HStack>
 
               )}
