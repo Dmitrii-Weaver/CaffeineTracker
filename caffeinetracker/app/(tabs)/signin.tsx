@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, ButtonText } from '@gluestack-ui/themed'
 import { Controller, useForm } from 'react-hook-form'
-import { ScrollView } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 
 import { app } from "../../firebaseConfig"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, GoogleAuthProvider, signInWithCredential } from '@firebase/auth';
@@ -11,7 +11,7 @@ import Register from '@/components/Register'
 import TextWithLink from '@/components/TextWithLink';
 import { FirebaseError } from 'firebase/app';
 import { Alert } from 'react-native';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, GoogleSigninButton, statusCodes, } from '@react-native-google-signin/google-signin';
 import { UserData, useUser } from '../../store';
 
 
@@ -39,7 +39,7 @@ export default function SignIn() {
 
 
     useEffect(() => {
-      
+
     }, [user]);
 
 
@@ -59,8 +59,8 @@ export default function SignIn() {
                 handleAuthResponse(result);
             }
         } catch (error: any) {
-                console.log(error)
-        } 
+            console.log(error)
+        }
     }
 
     const onSubmit = async (data: FormData) => {
@@ -77,7 +77,7 @@ export default function SignIn() {
         }
     }
 
-    const handleAuthResponse = (result: { success: boolean; message: string}) => {
+    const handleAuthResponse = (result: { success: boolean; message: string }) => {
         if (result.success) {
             toast.show({
                 render: () => {
@@ -230,9 +230,20 @@ export default function SignIn() {
                                 {isLoading ? "Loading..." : "Sign In"}
                             </Text>
                         </Button>
-                        <Button
+                        <GoogleSigninButton
+                            size={GoogleSigninButton.Size.Wide}
+                            style={{ width: '100%' }}
                             onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
-                        ></Button>
+                        />
+                        {Platform.OS === 'web' && (
+                            <Button
+                                onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+                                variant="outline"
+                                mt="$4"
+                            >
+                                <Text color="$blue600">Sign in with Google</Text>
+                            </Button>
+                        )}
                     </VStack>
 
                     <TextWithLink
