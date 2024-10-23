@@ -14,7 +14,7 @@ import { Home } from '@/components/Home';
 
 // Configure Google Sign-In outside of the component
 GoogleSignin.configure({
-   webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID
 });
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
