@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, ButtonText } from '@gluestack-ui/themed'
+import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, ButtonText, Image } from '@gluestack-ui/themed'
 import { Controller, useForm } from 'react-hook-form'
-import { Platform, ScrollView } from 'react-native'
+import { Dimensions, ScrollView, Platform } from 'react-native'
 
 import { app } from "../../firebaseConfig"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, GoogleAuthProvider, signInWithCredential } from '@firebase/auth';
@@ -107,9 +107,9 @@ export default function SignIn() {
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <Image source={require("@/assets/images/coffeebg.png")} alt="bg" position='absolute' width={Dimensions.get("window").width }  height={Dimensions.get("window").height} />
             <Box
                 flex={1}
-                backgroundColor="$backgroundLight0"
                 py="$4"
                 px="$4"
                 justifyContent="center"
@@ -119,9 +119,9 @@ export default function SignIn() {
                     w="$full"
                     maxWidth={400}
                     p="$6"
-                    borderWidth={1}
+                    borderWidth={2}
                     borderRadius={8}
-                    backgroundColor="$white"
+                    backgroundColor="#B0968E"
                     shadowColor="$shadowColor"
                     shadowOffset={{ width: 0, height: 2 }}
                     shadowOpacity={0.25}
@@ -156,9 +156,10 @@ export default function SignIn() {
                                     <FormControlLabel>
                                         <FormControlLabelText>Email</FormControlLabelText>
                                     </FormControlLabel>
-                                    <Input>
+                                    <Input borderColor='black'>
                                         <InputField
                                             placeholder="Enter your email"
+                                            placeholderTextColor={"black"}
                                             onBlur={onBlur}
                                             onChangeText={(text) => {
                                                 onChange(text);
@@ -193,9 +194,10 @@ export default function SignIn() {
                                     <FormControlLabel>
                                         <FormControlLabelText>Password</FormControlLabelText>
                                     </FormControlLabel>
-                                    <Input>
+                                    <Input borderColor='black'>
                                         <InputField
                                             placeholder="Enter your password"
+                                            placeholderTextColor={"black"}
                                             onBlur={onBlur}
                                             onChangeText={(text) => {
                                                 onChange(text);
@@ -225,6 +227,9 @@ export default function SignIn() {
                         <Button
                             onPress={handleSubmit(onSubmit)}
                             disabled={isLoading}
+                            backgroundColor='#6A5650'
+                            
+                            $hover-bgColor='#59453F'
                         >
                             <Text color="$white" fontWeight="$bold">
                                 {isLoading ? "Loading..." : "Sign In"}
@@ -249,6 +254,7 @@ export default function SignIn() {
                     <TextWithLink
                         text="Don't have an account?"
                         linkText="Register"
+                        
                         onPress={() => setShowRegister(true)}
                     />
                 </Box>

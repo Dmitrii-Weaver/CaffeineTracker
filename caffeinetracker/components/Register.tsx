@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Input, InputField, VStack, useToast, Text, ButtonText } from '@gluestack-ui/themed';
+import { Box, Button, FormControl, FormControlLabel, FormControlLabelText, FormControlHelper, Heading, Image, Input, InputField, VStack, useToast, Text, ButtonText } from '@gluestack-ui/themed';
 import { Controller, useForm } from 'react-hook-form';
-import { ScrollView } from 'react-native';
+import { Dimensions, ScrollView } from 'react-native';
 
 import { app } from "../firebaseConfig"
 import { getAuth, onAuthStateChanged, User } from '@firebase/auth';
@@ -60,9 +60,9 @@ export default function Register({ onBackToSignIn }: RegisterProps) {
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <Image source={require("@/assets/images/coffeebg.png")} alt="bg" position='absolute' width={Dimensions.get("window").width} height={Dimensions.get("window").height} />
             <Box
                 flex={1}
-                bg="$backgroundLight0"
                 py="$4"
                 px="$4"
                 justifyContent="center"
@@ -72,9 +72,9 @@ export default function Register({ onBackToSignIn }: RegisterProps) {
                     w="$full"
                     maxWidth="$96"
                     p="$6"
-                    borderWidth="$1"
+                    borderWidth="$2"
                     borderRadius="$lg"
-                    bg="$white"
+                    bg="#B0968E"
                     shadowColor="$shadowColor"
                     shadowOffset={{ width: 0, height: 2 }}
                     shadowOpacity={0.25}
@@ -100,9 +100,10 @@ export default function Register({ onBackToSignIn }: RegisterProps) {
                                     <FormControlLabel>
                                         <FormControlLabelText>Email</FormControlLabelText>
                                     </FormControlLabel>
-                                    <Input>
+                                    <Input borderColor='black'>
                                         <InputField
                                             placeholder="Enter your email"
+                                            placeholderTextColor={"black"}
                                             onBlur={onBlur}
                                             onChangeText={(text) => {
                                                 onChange(text);
@@ -137,9 +138,10 @@ export default function Register({ onBackToSignIn }: RegisterProps) {
                                     <FormControlLabel>
                                         <FormControlLabelText>Username</FormControlLabelText>
                                     </FormControlLabel>
-                                    <Input>
+                                    <Input borderColor='black'>
                                         <InputField
                                             placeholder="Enter your username"
+                                            placeholderTextColor={"black"}
                                             onBlur={onBlur}
                                             onChangeText={(text) => {
                                                 onChange(text);
@@ -173,8 +175,9 @@ export default function Register({ onBackToSignIn }: RegisterProps) {
                                     <FormControlLabel>
                                         <FormControlLabelText>Password</FormControlLabelText>
                                     </FormControlLabel>
-                                    <Input>
+                                    <Input borderColor='black'>
                                         <InputField
+                                            placeholderTextColor={"black"}
                                             placeholder="Enter your password"
                                             onBlur={onBlur}
                                             onChangeText={(text) => {
@@ -205,9 +208,10 @@ export default function Register({ onBackToSignIn }: RegisterProps) {
                                     <FormControlLabel>
                                         <FormControlLabelText>Repeat Password</FormControlLabelText>
                                     </FormControlLabel>
-                                    <Input>
+                                    <Input borderColor='black'>
                                         <InputField
                                             placeholder="Repeat your password"
+                                            placeholderTextColor={"black"}
                                             onBlur={onBlur}
                                             onChangeText={onChange}
                                             value={value}
@@ -227,14 +231,16 @@ export default function Register({ onBackToSignIn }: RegisterProps) {
                         <Button
                             onPress={handleSubmit(onSubmit)}
                             isDisabled={isLoading}
+                            backgroundColor='#6A5650'
+                            $hover-bgColor='#59453F'
                         >
                             <ButtonText color="$white" fontWeight="$bold">
                                 {isLoading ? "Registering..." : "Register"}
                             </ButtonText>
                         </Button>
 
-                        <Button onPress={onBackToSignIn} variant="outline">
-                            <ButtonText>Back to Sign In</ButtonText>
+                        <Button onPress={onBackToSignIn} variant="outline" borderColor='black' $hover-bgColor='#6A5650'>
+                            <ButtonText color='black'>Back to Sign In</ButtonText>
                         </Button>
                     </VStack>
                 </Box>
