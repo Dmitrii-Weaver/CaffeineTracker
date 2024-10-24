@@ -1,53 +1,53 @@
 {
   "project_info": {
-    "project_number": "860678435952",
-    "project_id": "coffeetracker-4d2b1",
-    "storage_bucket": "coffeetracker-4d2b1.appspot.com"
+    "project_number": "${EXPO_PUBLIC_PROJECT_NUMBER}",
+    "project_id": "${EXPO_PUBLIC_PROJECT_ID}",
+    "storage_bucket": "${EXPO_PUBLIC_STORAGE_BUCKET}"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:860678435952:android:9a317dce7a2c26384570b5",
+        "mobilesdk_app_id": "${EXPO_PUBLIC_MOBILESDK_APP_ID}",
         "android_client_info": {
           "package_name": "com.caffeinetracker.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "860678435952-491flsbaj73dpjhl91ihgod4u2jrv7g9.apps.googleusercontent.com",
+          "client_id": "${EXPO_PUBLIC_OAUTH_CLIENT_ID_1}",
           "client_type": 1,
           "android_info": {
             "package_name": "com.caffeinetracker.app",
-            "certificate_hash": "82dde22ef2c305d3df1e088932c151f2fb4e8e2f"
+            "certificate_hash": "${EXPO_PUBLIC_CERTIFICATE_HASH_1}"
           }
         },
         {
-          "client_id": "860678435952-o30uphiboouigmkcf7pf33o3fdj2e5ch.apps.googleusercontent.com",
+          "client_id": "${EXPO_PUBLIC_OAUTH_CLIENT_ID_2}",
           "client_type": 1,
           "android_info": {
             "package_name": "com.caffeinetracker.app",
-            "certificate_hash": "9cec82e46f23c914560c5db2d2b116b65340b8ef"
+            "certificate_hash": "${EXPO_PUBLIC_CERTIFICATE_HASH_2}"
           }
         },
         {
-          "client_id": "860678435952-9a7ga3tcfqbnopbs09ifpjn64ae4qil7.apps.googleusercontent.com",
+          "client_id": "${EXPO_PUBLIC_OAUTH_CLIENT_ID_3}",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCuEmTaELe1RTncGcTwapgJBEVjv_dE1rE"
+          "current_key": "${EXPO_PUBLIC_ANDROID_API_KEY}"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "860678435952-9a7ga3tcfqbnopbs09ifpjn64ae4qil7.apps.googleusercontent.com",
+              "client_id": "${EXPO_PUBLIC_OAUTH_CLIENT_ID_3}",
               "client_type": 3
             },
             {
-              "client_id": "860678435952-jvriqoj5qasjjdnv4fo9v3duootpukts.apps.googleusercontent.com",
+              "client_id": "${EXPO_PUBLIC_IOS_OAUTH_CLIENT_ID}",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.caffeinetracker.app"
