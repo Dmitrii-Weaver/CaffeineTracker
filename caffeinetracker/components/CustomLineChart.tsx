@@ -31,7 +31,7 @@ const CustomLineChart = (coffeeData: any) => {
         let i = 1
         while (i <= days) {
             daysArray.push(i)
-            i+=1
+            i += 1
         }
         return daysArray
     }
@@ -40,9 +40,11 @@ const CustomLineChart = (coffeeData: any) => {
     console.log(days)
 
     return (
-        <VStack>
+        <VStack
+            justifyContent="center"
+            alignItems="center">
             <Text>Cumgobbler's Line Chart</Text>
-            <LineChart
+            <LineChart 
                 data={{
                     labels: days,
                     datasets: [
@@ -58,8 +60,8 @@ const CustomLineChart = (coffeeData: any) => {
                         }
                     ]
                 }}
-                width={300} // from react-native
-                height={220}
+                width={Dimensions.get("window").width / 100 * 18} // from react-native
+                height={Dimensions.get("window").height / 100 * 20}
                 yAxisLabel="$"
                 yAxisSuffix="k"
                 yAxisInterval={1} // optional, defaults to 1
