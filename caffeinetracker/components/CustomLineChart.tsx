@@ -11,32 +11,83 @@ import { Dimensions } from "react-native";
 const CustomLineChart = (coffeeData: any) => {
 
     const currentdate = new Date()
+    var dateText = currentdate.getDate() + "/" + (currentdate.getMonth() + 1) + "/" + currentdate.getFullYear()
+
     const screenWidth = Dimensions.get("window").width;
     const chartConfig = {
         backgroundGradientFrom: "#1E2923",
         backgroundGradientFromOpacity: 0,
         backgroundGradientTo: "#08130D",
         backgroundGradientToOpacity: 0,
-        color: (opacity = 1) => "black" ,
+        color: (opacity = 1) => "black",
         strokeWidth: 2, // optional, default 3
         barPercentage: 0.5,
         useShadowColorFromDataset: false // optional
     };
 
-    const daysInMonth = () => {
-        let year = currentdate.getFullYear()
-        let month = currentdate.getMonth() + 1
-        let days = new Date(year, month, 0).getDate();
-        let daysArray = []
-        let i = 1
-        while (i <= days) {
-            daysArray.push(i)
-            i += 1
+    const pastWeekDays = () => {
+        let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        const d = new Date();
+        let day = weekdays[d.getDay()];
+        let index1 = weekdays.indexOf(day)
+        let index2 = 0
+        let index3 = 0
+        let index4 = 0
+        let index5 = 0
+        let index6 = 0
+        let index7 = 0
+
+        //DO NOT OPNE | DEAD INSIDE
+        {
+            if (index1 - 1 < 0) {
+                index2 = 6
+            }
+            else {
+                index2 = index1 - 1
+            }
+
+            if (index1 - 2 < 0) {
+                index3 = 5
+            }
+            else {
+                index3 = index1 - 2
+            }
+
+            if (index1 - 3 < 0) {
+                index4 = 4
+            }
+            else {
+                index4 = index1 - 3
+            }
+
+            if (index1 - 4 < 0) {
+                index5 = 3
+            }
+            else {
+                index5 = index1 - 4
+            }
+
+            if (index1 - 5 < 0) {
+                index6 = 2
+            }
+            else {
+                index6 = index1 - 5
+            }
+
+            if (index1 - 6 < 0) {
+                index7 = 1
+            }
+            else {
+                index7 = index1 - 6
+            }
         }
+        //
+
+        let daysArray = [weekdays[index7],weekdays[index6],weekdays[index5],weekdays[index4],weekdays[index3],weekdays[index2],weekdays[index1],]
         return daysArray
     }
 
-    const days = daysInMonth()
+    const days = pastWeekDays()
     console.log(days)
 
     return (
@@ -44,18 +95,13 @@ const CustomLineChart = (coffeeData: any) => {
             justifyContent="center"
             alignItems="center">
             <Text>Cumgobbler's Line Chart</Text>
-            <LineChart 
+            <LineChart
                 data={{
                     labels: days,
                     datasets: [
                         {
                             data: [
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100
+                                1,2,3,4,5,6,7
                             ]
                         }
                     ]
