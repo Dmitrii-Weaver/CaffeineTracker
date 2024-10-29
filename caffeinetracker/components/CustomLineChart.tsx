@@ -17,7 +17,7 @@ const CustomLineChart = (coffeeData: any) => {
         backgroundGradientFromOpacity: 0,
         backgroundGradientTo: "#08130D",
         backgroundGradientToOpacity: 0,
-        color: (opacity = 1) => `"white" , ${opacity})`,
+        color: (opacity = 1) => "black" ,
         strokeWidth: 2, // optional, default 3
         barPercentage: 0.5,
         useShadowColorFromDataset: false // optional
@@ -60,8 +60,8 @@ const CustomLineChart = (coffeeData: any) => {
                         }
                     ]
                 }}
-                width={(Dimensions.get("window").width > 1000 ? (Dimensions.get("window").width / 100 * 18) : (Dimensions.get("window").width ))} // from react-native
-                height={(Dimensions.get("window").width > 1000 ? (Dimensions.get("window").height / 100 * 20) : (Dimensions.get("window").height / 100 * 50))}
+                width={(Dimensions.get("window").width > 1000 ? (Dimensions.get("window").width / 100 * 18) : (300))} // from react-native
+                height={(Dimensions.get("window").width > 1000 ? (Dimensions.get("window").height / 100 * 20) : (220))}
                 yAxisLabel="$"
                 yAxisSuffix="k"
                 yAxisInterval={1} // optional, defaults to 1
