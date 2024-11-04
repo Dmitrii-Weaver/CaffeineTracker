@@ -25,6 +25,41 @@ const CustomLineChart = (coffeeData: any) => {
         useShadowColorFromDataset: false // optional
     };
 
+    console.log("the data is ", coffeeData, typeof (coffeeData))
+    console.log("the data array is ", coffeeData.coffeeData, typeof (coffeeData.coffeeData))
+    console.log("the data cell is ", coffeeData.coffeeData[0])
+
+    let startday = coffeeData.coffeeData.filter((i: any) => {
+        let today = new Date().getDate()
+        console.log(new Date().getDate())
+        console.log(i.timestamp.day)
+        return i.timestamp.day == today
+    })
+    let startdayMinus1 = coffeeData.coffeeData.filter((i: any) => {
+        let today = new Date().getDay() - 1
+        return i.timestamp.day == today
+    })
+    let startdayMinus2 = coffeeData.coffeeData.filter((i: any) => {
+        let today = new Date().getDay() - 2
+        return i.timestamp.day == today
+    })
+    let startdayMinus3 = coffeeData.coffeeData.filter((i: any) => {
+        let today = new Date().getDay() - 3
+        return i.timestamp.day == today
+    })
+    let startdayMinus4 = coffeeData.coffeeData.filter((i: any) => {
+        let today = new Date().getDay() - 4
+        return i.timestamp.day == today
+    })
+    let startdayMinus5 = coffeeData.coffeeData.filter((i: any) => {
+        let today = new Date().getDay() - 5
+        return i.timestamp.day == today
+    })
+    let startdayMinus6 = coffeeData.coffeeData.filter((i: any) => {
+        let today = new Date().getDay() - 6
+        return i.timestamp.day == today
+    })
+
     const pastWeekDays = () => {
         let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         const d = new Date();
@@ -83,7 +118,7 @@ const CustomLineChart = (coffeeData: any) => {
         }
         //
 
-        let daysArray = [weekdays[index7],weekdays[index6],weekdays[index5],weekdays[index4],weekdays[index3],weekdays[index2],weekdays[index1],]
+        let daysArray = [weekdays[index7], weekdays[index6], weekdays[index5], weekdays[index4], weekdays[index3], weekdays[index2], weekdays[index1],]
         return daysArray
     }
 
@@ -101,15 +136,22 @@ const CustomLineChart = (coffeeData: any) => {
                     datasets: [
                         {
                             data: [
-                                1,2,3,4,5,6,7
+                                
+                                3,
+                                4,
+                                0,
+                                2,
+                                5,
+                                7,
+                                9
                             ]
                         }
                     ]
                 }}
                 width={(Dimensions.get("window").width > 1000 ? (Dimensions.get("window").width / 100 * 18) : (300))} // from react-native
                 height={(Dimensions.get("window").width > 1000 ? (Dimensions.get("window").height / 100 * 20) : (220))}
-                yAxisLabel="$"
-                yAxisSuffix="k"
+                
+                yAxisSuffix=" cups"
                 yAxisInterval={1} // optional, defaults to 1
                 chartConfig={chartConfig}
                 bezier
