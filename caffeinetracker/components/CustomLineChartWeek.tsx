@@ -8,7 +8,7 @@ import { Dimensions } from "react-native";
 
 
 
-const CustomLineChart = (coffeeData: any) => {
+const CustomLineChartWeek = (coffeeData: any) => {
 
     const currentdate = new Date()
     var dateText = currentdate.getDate() + "/" + (currentdate.getMonth() + 1) + "/" + currentdate.getFullYear()
@@ -164,4 +164,4 @@ const CustomLineChart = (coffeeData: any) => {
     )
 }
 
-export default CustomLineChart
+export default CustomLineChartWeek

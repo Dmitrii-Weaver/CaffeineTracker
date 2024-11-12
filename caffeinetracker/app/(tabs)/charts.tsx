@@ -1,4 +1,4 @@
-import { Box, Button, ButtonText, Heading, HStack, ScrollView, VStack, Text } from '@gluestack-ui/themed'
+import { Box, Button, ButtonText, Heading, HStack, ScrollView, VStack, Text, SelectTrigger, SelectInput, SelectPortal, SelectContent, SelectDragIndicatorWrapper, SelectDragIndicator, SelectItem } from '@gluestack-ui/themed'
 import { Redirect, router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
@@ -6,9 +6,11 @@ import { app } from "../../firebaseConfig"
 import useGetUsernameByUid from '@/hooks/useGetUsernameByUid'
 import useGetCoffeeDataByUid from '@/hooks/useGetCoffeeDataByUid'
 import useHandleAuth from '@/hooks/useHandleAuth'
-import CustomLineChart from '@/components/CustomLineChart'
+import CustomLineChartWeek from '@/components/CustomLineChartWeek'
 import { Image } from '@gluestack-ui/themed'
 import { Dimensions } from 'react-native'
+import { Select } from '@gluestack-ui/themed'
+import { SelectBackdrop } from '@gluestack-ui/themed'
 
 
 const Charts = () => {
@@ -65,11 +67,31 @@ const Charts = () => {
               <Heading size="xl" textAlign="center">
                 Your coffee stats :
               </Heading>
-              {coffeeData ? <Text textAlign="center" color='black'>last coffee logged on {coffeeData[coffeeData.length - 1].timestamp.fulldate}</Text>
-                : null}
+              {coffeeData ? <Text textAlign="center" color='black'>last coffee logged on {coffeeData[coffeeData.length - 1].timestamp.fulldate}</Text> : null}
+
+              <Select
+                onValueChange={(value: string) => setChart(value)}
+                selectedValue={chart}
+              >
+                <SelectTrigger borderColor='black'>
+                  <SelectInput placeholder="Type" />
+                </SelectTrigger>
+                <SelectPortal>
+                  <SelectBackdrop />
+                  <SelectContent>
+                    <SelectDragIndicatorWrapper>
+                      <SelectDragIndicator />
+                    </SelectDragIndicatorWrapper>
+                    <SelectItem label="Today" value="Day" />
+                    <SelectItem label="This week" value="Week" />
+                    <SelectItem label="This month" value="Month" />
+                    <SelectItem label="This year" value="Year" />
+                  </SelectContent>
+                </SelectPortal>
+              </Select>
 
               {coffeeData ?
-                <CustomLineChart coffeeData={coffeeData} />
+                <Box display={chart == "Week" ? "flex" : "none"} >  <CustomLineChartWeek coffeeData={coffeeData} /></Box>
                 : null}
               <Button onPress={() => { router.replace('/log'); }}
                 backgroundColor='#6A5650'
