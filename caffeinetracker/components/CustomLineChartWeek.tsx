@@ -25,14 +25,14 @@ const CustomLineChartWeek = (coffeeData: any) => {
         useShadowColorFromDataset: false // optional
     };
 
-    console.log("the data is ", coffeeData, typeof (coffeeData))
-    console.log("the data array is ", coffeeData.coffeeData, typeof (coffeeData.coffeeData))
-    console.log("the data cell is ", coffeeData.coffeeData[0])
+    //console.log("the data is ", coffeeData, typeof (coffeeData))
+    //console.log("the data array is ", coffeeData.coffeeData, typeof (coffeeData.coffeeData))
+    //console.log("the data cell is ", coffeeData.coffeeData[0])
 
     let startday = coffeeData.coffeeData.filter((i: any) => {
         let today = new Date().getDate()
-        console.log(new Date().getDate())
-        console.log(i.timestamp.day)
+        //console.log(new Date().getDate())
+        //console.log(i.timestamp.day)
         return i.timestamp.day == today
     })
     let startdayMinus1 = coffeeData.coffeeData.filter((i: any) => {

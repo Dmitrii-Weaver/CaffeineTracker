@@ -11,6 +11,7 @@ import { Image } from '@gluestack-ui/themed'
 import { Dimensions } from 'react-native'
 import { Select } from '@gluestack-ui/themed'
 import { SelectBackdrop } from '@gluestack-ui/themed'
+import CustomChartDay from '@/components/CustomChartDay'
 
 
 const Charts = () => {
@@ -25,7 +26,7 @@ const Charts = () => {
   const [user, setUser] = useState<User | null>(null);
   const { username, isLoading: usernameLoading, error: usernameError } = useGetUsernameByUid(user)
   const { coffeeData, isLoading: coffeeDataLoading, error: coffeeDataError } = useGetCoffeeDataByUid(user)
-  const [chart, setChart] = useState("Week")
+  const [chart, setChart] = useState("Day")
 
 
   useEffect(() => {
@@ -91,7 +92,11 @@ const Charts = () => {
               </Select>
 
               {coffeeData ?
-                <Box display={chart == "Week" ? "flex" : "none"} >  <CustomLineChartWeek coffeeData={coffeeData} /></Box>
+                <Box>
+                  
+                  <Box display={chart == "Day" ? "flex" : "none"} >  <CustomChartDay coffeeData={coffeeData} /></Box>  
+                  <Box display={chart == "Week" ? "flex" : "none"} >  <CustomLineChartWeek coffeeData={coffeeData} /></Box>  
+                </Box>
                 : null}
               <Button onPress={() => { router.replace('/log'); }}
                 backgroundColor='#6A5650'
