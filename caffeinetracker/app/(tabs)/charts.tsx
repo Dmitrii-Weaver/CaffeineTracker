@@ -23,6 +23,7 @@ const Charts = () => {
   const [user, setUser] = useState<User | null>(null);
   const { username, isLoading: usernameLoading, error: usernameError } = useGetUsernameByUid(user)
   const { coffeeData, isLoading: coffeeDataLoading, error: coffeeDataError } = useGetCoffeeDataByUid(user)
+  const [chart, setChart] = useState("Week")
 
 
   useEffect(() => {
