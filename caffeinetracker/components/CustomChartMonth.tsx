@@ -17,7 +17,7 @@ const CustomChartMonth = (coffeeData: any) => {
         var coffeesThisMonth = 0
 
         coffeeData.coffeeData.map((i: any) => {
-            var coffeeDate =  i.timestamp.month + "/" + i.timestamp.year
+            var coffeeDate = i.timestamp.month + "/" + i.timestamp.year
             if (thisMonth == coffeeDate) {
                 coffeesThisMonth += 1
             }
