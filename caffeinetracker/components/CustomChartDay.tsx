@@ -47,7 +47,6 @@ const CustomChartDay = (coffeeData: any) => {
             alignItems="center">
             <Heading size="lg" textAlign='center'>Cups of coffee had today: {coffeeData ? (dailyCoffeeCount == 0 ? coffeeCountDay() : dailyCoffeeCount) : 0} </Heading>
             <Text color='black'>{coffeeData ? (dailyCoffeeCount == 0 ? coffeeLogDay() : dailyCoffeeCount) : "none"}</Text>
-
         </VStack>
     )
 }
