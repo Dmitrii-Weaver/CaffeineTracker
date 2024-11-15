@@ -46,7 +46,7 @@ const CustomChartMonth = (coffeeData: any) => {
         var log = ""
 
         coffeeData.coffeeData.map((i: any) => {
-            var coffeeDate = + i.timestamp.month + "/" + i.timestamp.year
+            var coffeeDate =  i.timestamp.month + "/" + i.timestamp.year
             if (thisMonth == coffeeDate) {
                 log = log + "at " + i.timestamp.time + " \n"
             }
