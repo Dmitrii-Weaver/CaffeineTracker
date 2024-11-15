@@ -13,6 +13,7 @@ import { Select } from '@gluestack-ui/themed'
 import { SelectBackdrop } from '@gluestack-ui/themed'
 import CustomChartDay from '@/components/CustomChartDay'
 import CustomChartMonth from '@/components/CustomChartMonth'
+import CustomChartYear from '@/components/CustomChartYear'
 
 
 const Charts = () => {
@@ -98,6 +99,7 @@ const Charts = () => {
                   <Box display={chart == "Day" ? "flex" : "none"} ><CustomChartDay coffeeData={coffeeData} /></Box> 
                   <Box display={chart == "Week" ? "flex" : "none"} ><CustomLineChartWeek coffeeData={coffeeData} /></Box> 
                   <Box display={chart == "Month" ? "flex" : "none"} ><CustomChartMonth coffeeData={coffeeData} /></Box>  
+                  <Box display={chart == "Year" ? "flex" : "none"} ><CustomChartYear coffeeData={coffeeData} /></Box>  
 
                 </Box>
                 : null}
