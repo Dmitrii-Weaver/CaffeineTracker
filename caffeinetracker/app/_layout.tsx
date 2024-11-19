@@ -11,6 +11,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import React from 'react';
 import { UserProvider } from '@/store';
 import { Home } from '@/components/Home';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Configure Google Sign-In outside of the component
 GoogleSignin.configure({
@@ -38,15 +39,25 @@ export default function RootLayout() {
     return null;
   }
 
+ console.log(process.env.EXPO_PUBLIC_WEB_CLIENT_ID)
 
-  return (
-    <UserProvider>
-      <GluestackUIProvider config={config}>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Home/>
-        </ThemeProvider>
-      </GluestackUIProvider>
-    </UserProvider>
+ if (!process.env.EXPO_PUBLIC_WEB_CLIENT_ID) {
+
+  console.log('Client ID is empty')
+
+  return null
+ }
+  
+ return (
+    <GoogleOAuthProvider clientId={process.env.EXPO_PUBLIC_WEB_CLIENT_ID}>
+      <UserProvider>
+        <GluestackUIProvider config={config}>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Home />
+          </ThemeProvider>
+        </GluestackUIProvider>
+      </UserProvider>
+    </GoogleOAuthProvider>
 
   );
 }
