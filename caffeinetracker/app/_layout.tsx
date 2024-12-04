@@ -13,6 +13,7 @@ import { UserProvider } from '@/store';
 import { Home } from '@/components/Home';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Platform } from 'react-native';
+import { Stack } from 'expo-router';
 
 // Configure Google Sign-In outside of the component
 GoogleSignin.configure({
