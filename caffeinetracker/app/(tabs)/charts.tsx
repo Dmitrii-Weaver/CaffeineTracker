@@ -61,7 +61,7 @@ const Charts = () => {
               <Heading size="xl" textAlign="center">
                 Your coffee stats :
               </Heading>
-              {coffeeData ? <Text textAlign="center" color='black'>last coffee logged on {coffeeData[coffeeData.length - 1].timestamp.fulldate}</Text> : null}
+              
 
               <Select
                 onValueChange={(value: string) => setChart(value)}
@@ -124,3 +124,6 @@ export default Charts
 //<Box display={chart == "Day" ? "flex" : "none"} >  <CustomChartDay coffeeData={coffeeData} /></Box>  
 //<Box display={chart == "Week" ? "flex" : "none"} >  <CustomLineChartWeek coffeeData={coffeeData} /></Box>  
 //<Box display={chart == "Month" ? "flex" : "none"} >  <CustomChartMonth coffeeData={coffeeData} /></Box>  
+
+
+//{coffeeData ? <Text textAlign="center" color='black'>last coffee logged on {coffeeData[coffeeData.length - 1].timestamp.fulldate}</Text> : null}
